@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "../include/generate-maze.hpp"
+#include "../include/solve-maze.hpp"
 #include "../include/tools.hpp"
 
 int main()
@@ -9,14 +10,14 @@ int main()
     int width, height;
     char answer;
 
-    // Choose algorithm
+    // Choose generator algorithm
     std::cout << "Choose the algorithm to generate the maze:" << std::endl;
     std::cout << "(1) Depth-First Search" << std::endl;
     std::cout << "(2) Random Selection" << std::endl;
     std::cin >> algorithm;
 
     // Set maze dimensions
-    std::cout << "Enter the size of the labyrinth (width, height): ";
+    std::cout << std::endl << "Enter the size of the labyrinth (width, height): ";
     do
     {
         std::cin >> width >> height;
@@ -41,7 +42,16 @@ int main()
 
     if (answer == 'y' || answer == 'Y')
     {
-        std::cout << "Solving maze..." << std::endl;
+        std::cout << "Solving maze..." << std::endl << std::endl;
+
+        // Choose solver algorithm
+        std::cout << "Choose the algorithm to solve the maze:" << std::endl;
+        std::cout << "(1) Breadth-First" << std::endl;
+        std::cout << "(2) Random Selection" << std::endl;
+        std::cin >> algorithm;
+
+        SolveMaze(&maze, &algorithm);
+        PrintMaze(&maze);
     }
 
     return 0;

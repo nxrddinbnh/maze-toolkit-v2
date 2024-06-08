@@ -50,6 +50,25 @@ void AddPaths(std::vector<std::vector<int>> *maze)
     }
 }
 
+std::pair<int, int> RandomStart(std::vector<std::vector<int>> *maze)
+{
+    std::random_device seed;
+    std::mt19937 random(seed());
+
+    std::uniform_int_distribution<int> distributionX(0, (*maze)[0].size() - 1);
+    std::uniform_int_distribution<int> distributionY(0, (*maze).size() - 1);
+
+    int startX, startY;
+
+    do
+    {
+        startX = distributionX(random);
+        startY = distributionY(random);
+    } while ((*maze)[startY][startX] == -1);
+
+    return std::make_pair(startY, startX);
+}
+
 void SetEntryExit(std::vector<std::vector<int>> *maze)
 {
     std::random_device seed;
@@ -76,15 +95,15 @@ void PrintMaze(std::vector<std::vector<int>> *maze)
         {
             if ((*maze)[height][width] == -1)
             {
-                std::cout << "# ";
+                std::cout << "# "; // Walls
             }
             else if ((*maze)[height][width] == 2147483646)
             {
-                std::cout << ". ";
+                std::cout << ". "; // Right way
             }
             else
             {
-                std::cout << "  ";
+                std::cout << "  "; // Empty cells
             }
         }
 
