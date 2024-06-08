@@ -4,24 +4,17 @@
 void DepthFirstSearch(std::vector<std::vector<int>> *maze)
 {
     CreateGrid(maze);
-
+    
     std::random_device seed;
     std::mt19937 random(seed());
-
-    std::uniform_int_distribution<int> distributionX(0, (*maze)[0].size() - 1);
-    std::uniform_int_distribution<int> distributionY(0, (*maze).size() - 1);
 
     std::stack<std::pair<int, int>> stack;
     std::vector<std::pair<int, int>> directions = {{2, 0}, {0, 2}, {-2, 0}, {0, -2}};
     std::vector<int> order = {0, 1, 2, 3};
 
-    int startX, startY;
-
-    do
-    {
-        startX = distributionX(random);
-        startY = distributionY(random);
-    } while ((*maze)[startY][startX] == -1);
+    std::pair<int, int> start = RandomStart(maze);
+    int startX = start.second;
+    int startY = start.first;
 
     (*maze)[startY][startX] = 2;
     stack.push(std::make_pair(startY, startX));
