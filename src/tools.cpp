@@ -112,3 +112,18 @@ void PrintMaze(std::vector<std::vector<int>> *maze)
 
     std::cout << std::endl;
 }
+
+void Enclose(std::vector<std::vector<int>> *maze)
+{
+    for (int i = 0; i < (*maze).size(); i++)
+    {
+        (*maze)[i][0] = -1;
+        (*maze)[i][(*maze)[0].size() - 1] = -1;
+    }
+
+    for (int i = 0; i < (*maze)[0].size(); i++)
+    {
+        (*maze)[0][i] = -1;
+        (*maze)[(*maze).size() - 1][i] = -1;
+    }
+}
