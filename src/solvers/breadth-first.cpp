@@ -3,31 +3,13 @@
 
 void BreadthFirst(std::vector<std::vector<int>> *maze)
 {
-    int entry, exit;
+    int entry = FindEntryExit(maze).first;
+    int exit = FindEntryExit(maze).second;
 
     std::vector<std::vector<bool>> visited((*maze).size(), std::vector<bool>((*maze)[0].size(), false));
     std::vector<std::vector<std::pair<int, int>>> prev((*maze).size(), std::vector<std::pair<int, int>>((*maze)[0].size(), {-1, -1}));
     std::queue<std::pair<int, int>> queue;
     std::vector<std::pair<int, int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-
-    // Find the entry and exit
-    for (int i = 0; i < (*maze).size(); i++) 
-    {
-        if ((*maze)[i][0] == 3)
-        {
-            entry = i;
-            break;
-        }
-    }
-
-    for (int i = 0; i < (*maze).size(); i++) 
-    {
-        if ((*maze)[i][(*maze)[0].size() - 1] == 3)
-        {
-            exit = i;
-            break;
-        }
-    }
 
     queue.push({entry, 0});
     visited[entry][0] = true;

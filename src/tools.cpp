@@ -127,3 +127,28 @@ void Enclose(std::vector<std::vector<int>> *maze)
         (*maze)[(*maze).size() - 1][i] = -1;
     }
 }
+
+std::pair<int, int> FindEntryExit(std::vector<std::vector<int>> *maze)
+{
+    int entry, exit;
+
+    for (int i = 0; i < (*maze).size(); i++) 
+    {
+        if ((*maze)[i][0] == 3)
+        {
+            entry = i;
+            break;
+        }
+    }
+
+    for (int i = 0; i < (*maze).size(); i++) 
+    {
+        if ((*maze)[i][(*maze)[0].size() - 1] == 3)
+        {
+            exit = i;
+            break;
+        }
+    }
+
+    return std::make_pair(entry, exit);
+}
