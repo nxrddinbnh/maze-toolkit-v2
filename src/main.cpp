@@ -50,7 +50,8 @@ int main()
         std::cout << "Choose the algorithm to solve the maze:" << std::endl;
         std::cout << "(1) Breadth-First" << std::endl;
         std::cout << "(2) Bidirectional BFS" << std::endl;
-        std::cout << "(3) Random Selection" << std::endl;
+        std::cout << "(3) A*" << std::endl;
+        std::cout << "(4) Random Selection" << std::endl;
         std::cin >> algorithm;
 
         SolveMaze(&maze, &algorithm);

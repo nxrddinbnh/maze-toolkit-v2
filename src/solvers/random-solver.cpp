@@ -1,6 +1,7 @@
 #include "../../include/solvers/random-solver.hpp"
 #include "../../include/solvers/breadth-first.hpp"
 #include "../../include/solvers/bidirectional-bfs.hpp"
+#include "../../include/solvers/a-start.hpp"
 
 void RandomSolver(std::vector<std::vector<int>>* maze)
 {
@@ -11,6 +12,7 @@ void RandomSolver(std::vector<std::vector<int>>* maze)
     {
         BreadthFirst,
         BidirectionalBFS,
+        AStar,
     };
 
     std::uniform_int_distribution<int> chooseAlgo(0, solversAlgorithms.size() - 1);
