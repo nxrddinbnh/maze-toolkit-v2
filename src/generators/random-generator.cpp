@@ -1,6 +1,7 @@
 #include "../../include/generators/random-generator.hpp"
 #include "../../include/generators/depth-first-search.hpp"
 #include "../../include/generators/recursive-division.hpp"
+#include "../../include/generators/kruskal.hpp"
 
 void RandomGenerator(std::vector<std::vector<int>>* maze)
 {
@@ -11,6 +12,7 @@ void RandomGenerator(std::vector<std::vector<int>>* maze)
     {
         DepthFirstSearch,
         RecursiveDivision,
+        Kruskal,
     };
 
     std::uniform_int_distribution<int> chooseAlgo(0, generatorsAlgorithms.size() - 1);
