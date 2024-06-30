@@ -55,16 +55,19 @@ std::pair<int, int> RandomStart(std::vector<std::vector<int>> *maze)
     std::random_device seed;
     std::mt19937 random(seed());
 
-    std::uniform_int_distribution<int> distributionX(0, (*maze)[0].size() - 1);
-    std::uniform_int_distribution<int> distributionY(0, (*maze).size() - 1);
+    std::uniform_int_distribution<int> distributionX(1, (*maze)[0].size() - 2);
+    std::uniform_int_distribution<int> distributionY(1, (*maze).size() - 2);
 
     int startX, startY;
 
-    do
+    while (true)
     {
         startX = distributionX(random);
         startY = distributionY(random);
-    } while ((*maze)[startY][startX] == -1);
+
+        if (startX % 2 == 1 && startY % 2 == 1)
+            break;
+    }
 
     return std::make_pair(startY, startX);
 }
@@ -93,7 +96,7 @@ void PrintMaze(std::vector<std::vector<int>> *maze)
     {
         for (int width = 0; width < (*maze)[0].size(); width++)
         {
-            if ((*maze)[height][width] == -1)
+            if ((*maze)[height][width] <= -1)
             {
                 std::cout << "# "; // Walls
             }
@@ -132,7 +135,7 @@ std::pair<int, int> FindEntryExit(std::vector<std::vector<int>> *maze)
 {
     int entry, exit;
 
-    for (int i = 0; i < (*maze).size(); i++) 
+    for (int i = 0; i < (*maze).size(); i++)
     {
         if ((*maze)[i][0] == 3)
         {
@@ -141,7 +144,7 @@ std::pair<int, int> FindEntryExit(std::vector<std::vector<int>> *maze)
         }
     }
 
-    for (int i = 0; i < (*maze).size(); i++) 
+    for (int i = 0; i < (*maze).size(); i++)
     {
         if ((*maze)[i][(*maze)[0].size() - 1] == 3)
         {
@@ -151,4 +154,15 @@ std::pair<int, int> FindEntryExit(std::vector<std::vector<int>> *maze)
     }
 
     return std::make_pair(entry, exit);
+}
+
+void Fill(std::vector<std::vector<int>> *maze)
+{
+    for (int y = 0; y < (*maze).size(); y++)
+    {
+        for (int x = 0; x < (*maze)[0].size(); x++)
+        {
+            (*maze)[y][x] = -1;
+        }
+    }
 }

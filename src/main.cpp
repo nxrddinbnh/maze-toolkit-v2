@@ -15,7 +15,8 @@ int main()
     std::cout << "(1) Depth-First Search" << std::endl;
     std::cout << "(2) Recursive Division" << std::endl;
     std::cout << "(3) Kruskal" << std::endl;
-    std::cout << "(4) Random Selection" << std::endl;
+    std::cout << "(4) Wilson" << std::endl;
+    std::cout << "(5) Random Selection" << std::endl;
     std::cin >> algorithm;
 
     // Set maze dimensions

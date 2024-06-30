@@ -3,6 +3,7 @@
 #include "../include/generators/random-generator.hpp"
 #include "../include/generators/recursive-division.hpp"
 #include "../include/generators/kruskal.hpp"
+#include "../include/generators/wilson.hpp"
 
 void GenerateMaze(std::vector<std::vector<int>> *maze, int *algorithm)
 {
@@ -11,6 +12,7 @@ void GenerateMaze(std::vector<std::vector<int>> *maze, int *algorithm)
     algorithms.push_back(DepthFirstSearch);
     algorithms.push_back(RecursiveDivision);
     algorithms.push_back(Kruskal);
+    algorithms.push_back(Wilson);
     algorithms.push_back(RandomGenerator);
 
     if ((*algorithm - 1) < algorithms.size())
