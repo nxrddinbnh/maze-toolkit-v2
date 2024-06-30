@@ -5,79 +5,108 @@ void RecursiveDivision(std::vector<std::vector<int>> *maze)
 {
     std::srand(std::time(nullptr));
 
-    int xMax = (*maze)[0].size() - 2;
-    int yMax = (*maze).size() - 2;
-    int xMin = 1;
-    int yMin = 1;
-
-    std::vector<std::pair<int, int>> holes;
+    int maxX = (*maze)[0].size() - 2;
+    int maxY = (*maze).size() - 2;
+    int minX = 1;
+    int minY = 1;
 
     Enclose(maze);
 
     // Recursive function to divide the maze
-    std::function<void(int, int, int, int)> Division = [&](int xMin, int xMax, int yMin, int yMax) 
+    std::function<void(int, int, int, int)> Division = [&](int newMinX, int newMaxX, int newMinY, int newMaxY)
     {
         // Stop dividing if area is too small
-        if (xMax - xMin < 2 || yMax - yMin < 2) return;
-
-        bool isHorizontal;
-        if (xMax - xMin >= 3 && yMax - yMin >= 3)
+        if (newMaxX - newMinX < 2 || newMaxY - newMinY < 2)
         {
-            isHorizontal = rand() % 2 == 0;
+            return;
         }
-        else if (xMax - xMin < 3)
+
+        int numLines;
+        bool isHorizontal;
+
+        if (newMinX == minX && newMaxX == maxX && newMinY == minY && newMaxY == maxY)
         {
-            isHorizontal = true;
+            numLines = rand() % 4 + 1;
+            isHorizontal = false;
         }
         else
         {
-            isHorizontal = false;
+            numLines = 1;
+
+            if (newMaxX - newMinX >= 4 && newMaxY - newMinY >= 4)
+            {
+                isHorizontal = rand() % 2 == 0;
+            }
+            else if (newMaxX - newMinX < 4)
+            {
+                isHorizontal = true;
+            }
+            else
+            {
+                isHorizontal = false;
+            }
         }
 
         if (isHorizontal)
         {
-            int y = rand() % ((yMax - 1) - (yMin + 1) + 1) + (yMin + 1);
-            int hole = rand() % (xMax - xMin + 1) + xMin;
+            int y, hole;
+            int lastY = -10;
 
-            // Prevent pathways wider than 1 unit
-            if (y % 2 != 0) y++;
-            if (y > yMax) y -= 2;
+            for (int i = 0; i < numLines; i++)
+            {
+                do
+                {
+                    y = rand() % ((newMaxY - 1) - (newMinY + 1) + 1) + (newMinY + 1);
+                } while (y % 2 == 1 || abs(y - lastY) < 2);
 
-            // Prevent create exits in front of walls
-            if (hole % 2 == 0) hole++;
-            if (hole > xMax) hole -= 2;
+                lastY = y;
 
-            for (int i = xMin; i <= xMax; i++)
-                if (i != hole) (*maze)[y][i] = -1;
+                do
+                {
+                    hole = rand() % (newMaxX - newMinX + 1) + newMinX;
+                } while (hole % 2 == 0);
 
-            holes.push_back({y, hole});
+                // Trace the line of walls
+                for (int j = newMinX; j <= newMaxX; j++)
+                {
+                    if (j != hole)
+                    {
+                        (*maze)[y][j] = -1;
+                    }
+                }
+            }
 
-            Division(xMin, xMax, yMin, y - 1);
-            Division(xMin, xMax, y + 1, yMax);
+            Division(newMinX, newMaxX, newMinY, y - 1);
+            Division(newMinX, newMaxX, y + 1, newMaxY);
         }
         else
         {
-            int x = rand() % ((xMax - 1) - (xMin + 1) + 1) + (xMin + 1);
-            int hole = rand() % (yMax - yMin + 1) + yMin;
+            int x, hole;
 
-            // Prevent pathways wider than 1 unit
-            if (x % 2 != 0) x++;
-            if (x > xMax) x -= 2;
+            do
+            {
+                x = rand() % ((newMaxX - 1) - (newMinX + 1) + 1) + (newMinX + 1);
+            } while (x % 2 == 1);
 
-            // Prevent create exits in front of walls
-            if (hole % 2 == 0) hole++;
-            if (hole > yMax) hole -= 2;
+            do
+            {
+                hole = rand() % (newMaxY - newMinY + 1) + newMinY;
+            } while (hole % 2 == 0);
 
-            for (int i = yMin; i <= yMax; ++i)
-                if (i != hole) (*maze)[i][x] = -1;
+            // Trace the line of walls
+            for (int j = newMinY; j <= newMaxY; j++)
+            {
+                if (j != hole)
+                {
+                    (*maze)[j][x] = -1;
+                }
+            }
 
-            holes.push_back({hole, x});
-
-            Division(xMin, x - 1, yMin, yMax);
-            Division(x + 1, xMax, yMin, yMax);
+            Division(newMinX, x - 1, newMinY, newMaxY);
+            Division(x + 1, newMaxX, newMinY, newMaxY);
         }
     };
 
-    Division(xMin, xMax, yMin, yMax);
+    Division(minX, maxX, minY, maxY);
     SetEntryExit(maze);
 }
