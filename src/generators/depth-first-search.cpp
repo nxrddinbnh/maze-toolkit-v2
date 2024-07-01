@@ -3,49 +3,46 @@
 
 void DepthFirstSearch(std::vector<std::vector<int>> *maze)
 {
-    CreateGrid(maze);
-    
     std::random_device seed;
     std::mt19937 random(seed());
 
     std::stack<std::pair<int, int>> stack;
-    std::vector<std::pair<int, int>> directions = {{2, 0}, {0, 2}, {-2, 0}, {0, -2}};
-    std::vector<int> order = {0, 1, 2, 3};
+    std::vector<std::vector<bool>> isVisited((*maze).size(), std::vector<bool>((*maze)[0].size(), false));
+    std::vector<std::pair<int, int>> directions = {{-2, 0}, {0, 2}, {2, 0}, {0, -2}};
+    std::pair<int, int> start = RandomCell(maze);
 
-    std::pair<int, int> start = RandomStart(maze);
-    int startX = start.second;
-    int startY = start.first;
+    Grid(maze);
 
-    (*maze)[startY][startX] = 2;
-    stack.push(std::make_pair(startY, startX));
+    isVisited[start.first][start.second] = true;
+    stack.push(start);
 
     while (!stack.empty())
     {
-        int currentX = stack.top().second;
-        int currentY = stack.top().first;
-        bool found = false;
+        std::pair<int, int> current = stack.top();
+        bool isFound = false;
 
-        std::shuffle(order.begin(), order.end(), random);
+        std::shuffle(directions.begin(), directions.end(), random);
 
-        for (int i : order)
+        for (auto &dir : directions)
         {
-            int nextX = currentX + directions[i].second;
-            int nextY = currentY + directions[i].first;
+            int nextY = current.first + dir.first;
+            int nextX = current.second + dir.second;
 
-            if (nextX >= 0 && nextX < (*maze)[0].size() && nextY >= 0 && nextY < (*maze).size())
+            if (InLimits(maze, {nextY, nextX}) && !isVisited[nextY][nextX])
             {
-                if ((*maze)[nextY][nextX] != 2)
-                {
-                    (*maze)[nextY][nextX] = 2;
-                    (*maze)[currentY + (nextY - currentY) / 2][currentX + (nextX - currentX) / 2] = 2;
-                    stack.push(std::make_pair(nextY, nextX));
-                    found = true;
-                    break;
-                }
+                (*maze)[(current.first + nextY) / 2][(current.second + nextX) / 2] = 0;
+                isVisited[(current.first + nextY) / 2][(current.second + nextX) / 2] = true;
+                (*maze)[nextY][nextX] = 0;
+                isVisited[nextY][nextX] = true;
+
+                stack.push(std::make_pair(nextY, nextX));
+                isFound = true;
+
+                break;
             }
         }
 
-        if (!found)
+        if (!isFound)
         {
             stack.pop();
         }

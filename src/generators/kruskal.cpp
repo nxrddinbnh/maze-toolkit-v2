@@ -9,7 +9,7 @@ void Kruskal(std::vector<std::vector<int>> *maze)
     int indexCell = 0;
     std::vector<std::pair<int, int>> wallList;
 
-    CreateGrid(maze);
+    Grid(maze);
 
     // Identify walls and initialize cells
     for (int y = 1; y < (*maze).size() - 1; y++)
@@ -19,7 +19,9 @@ void Kruskal(std::vector<std::vector<int>> *maze)
             if ((*maze)[y][x] == -1)
             {
                 if ((y + x) % 2 == 1)
+                {
                     wallList.push_back({y, x});
+                }
             }
             else
             {
@@ -64,13 +66,19 @@ void Kruskal(std::vector<std::vector<int>> *maze)
             }
         }
 
-		(*maze)[y][x] = minValue;
+        (*maze)[y][x] = minValue;
 
         // Change all cells with maxValue to minValue
-		for (int i = 1; i < (*maze).size() - 1; i++)
-			for (int j = 1; j < (*maze)[0].size() - 1; j++)
-				if ((*maze)[i][j] == maxValue)
-					(*maze)[i][j] = minValue;
+        for (int i = 1; i < (*maze).size() - 1; i++)
+        {
+            for (int j = 1; j < (*maze)[0].size() - 1; j++)
+            {
+                if ((*maze)[i][j] == maxValue)
+                {
+                    (*maze)[i][j] = minValue;
+                }
+            }
+        }
     }
 
     SetEntryExit(maze);

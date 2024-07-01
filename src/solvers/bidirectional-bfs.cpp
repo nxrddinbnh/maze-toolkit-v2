@@ -3,47 +3,46 @@
 
 void BidirectionalBFS(std::vector<std::vector<int>> *maze)
 {
-    int entry = FindEntryExit(maze).first;
-    int exit = FindEntryExit(maze).second;
-
-    std::vector<std::vector<bool>> visitedEntry((*maze).size(), std::vector<bool>((*maze)[0].size(), false));
-    std::vector<std::vector<bool>> visitedExit((*maze).size(), std::vector<bool>((*maze)[0].size(), false));
+    std::vector<std::vector<bool>> isVisitedEntry((*maze).size(), std::vector<bool>((*maze)[0].size(), false));
+    std::vector<std::vector<bool>> isVisitedExit((*maze).size(), std::vector<bool>((*maze)[0].size(), false));
     std::vector<std::vector<std::pair<int, int>>> prevEntry((*maze).size(), std::vector<std::pair<int, int>>((*maze)[0].size(), {-1, -1}));
     std::vector<std::vector<std::pair<int, int>>> prevExit((*maze).size(), std::vector<std::pair<int, int>>((*maze)[0].size(), {-1, -1}));
 
     std::queue<std::pair<int, int>> queueEntry;
     std::queue<std::pair<int, int>> queueExit;
 
-    std::vector<std::pair<int, int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    std::vector<std::pair<int, int>> directions = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+
+    int entry = FindEntryExit(maze).first;
+    int exit = FindEntryExit(maze).second;
 
     queueEntry.push({entry, 0});
-    visitedEntry[entry][0] = true;
+    isVisitedEntry[entry][0] = true;
 
     queueExit.push({exit, (*maze)[0].size() - 1});
-    visitedExit[exit][(*maze)[0].size() - 1] = true;
+    isVisitedExit[exit][(*maze)[0].size() - 1] = true;
 
     while (!queueEntry.empty() && !queueExit.empty())
     {
         // BFS from the entry
         if (!queueEntry.empty())
         {
-            int currentY = queueEntry.front().first;
-            int currentX = queueEntry.front().second;
+            std::pair<int, int> current = queueEntry.front();
             queueEntry.pop();
 
             for (const std::pair<int, int> &dir : directions)
             {
-                int nextY = currentY + dir.first;
-                int nextX = currentX + dir.second;
+                int nextY = current.first + dir.first;
+                int nextX = current.second + dir.second;
 
                 // Cell is accessible
-                if (nextX >= 0 && nextX < (*maze)[0].size() && nextY >= 0 && nextY < (*maze).size())
+                if (InLimits(maze, {nextY, nextX}))
                 {
-                    if ((*maze)[nextY][nextX] != -1 && !visitedEntry[nextY][nextX])
+                    if ((*maze)[nextY][nextX] != -1 && !isVisitedEntry[nextY][nextX])
                     {
                         queueEntry.push({nextY, nextX});
-                        visitedEntry[nextY][nextX] = true;
-                        prevEntry[nextY][nextX] = {currentY, currentX};
+                        isVisitedEntry[nextY][nextX] = true;
+                        prevEntry[nextY][nextX] = current;
                     }
                 }
             }
@@ -52,23 +51,22 @@ void BidirectionalBFS(std::vector<std::vector<int>> *maze)
         // BFS from the exit
         if (!queueExit.empty())
         {
-            int currentY = queueExit.front().first;
-            int currentX = queueExit.front().second;
+            std::pair<int, int> current = queueExit.front();
             queueExit.pop();
 
             for (const std::pair<int, int> &dir : directions)
             {
-                int nextY = currentY + dir.first;
-                int nextX = currentX + dir.second;
+                int nextY = current.first + dir.first;
+                int nextX = current.second + dir.second;
 
                 // Cell is accessible
-                if (nextX >= 0 && nextX < (*maze)[0].size() && nextY >= 0 && nextY < (*maze).size())
+                if (InLimits(maze, {nextY, nextX}))
                 {
-                    if ((*maze)[nextY][nextX] != -1 && !visitedExit[nextY][nextX])
+                    if ((*maze)[nextY][nextX] != -1 && !isVisitedExit[nextY][nextX])
                     {
                         queueExit.push({nextY, nextX});
-                        visitedExit[nextY][nextX] = true;
-                        prevExit[nextY][nextX] = {currentY, currentX};
+                        isVisitedExit[nextY][nextX] = true;
+                        prevExit[nextY][nextX] = current;
                     }
                 }
             }
@@ -79,7 +77,7 @@ void BidirectionalBFS(std::vector<std::vector<int>> *maze)
         {
             for (int x = 0; x < (*maze)[0].size(); ++x)
             {
-                if (visitedEntry[y][x] && visitedExit[y][x])
+                if (isVisitedEntry[y][x] && isVisitedExit[y][x])
                 {
                     // Rebuild the road from the entry to the intersection
                     int currentY = y;

@@ -3,13 +3,12 @@
 #include "../../include/solvers/bidirectional-bfs.hpp"
 #include "../../include/solvers/a-start.hpp"
 
-void RandomSolver(std::vector<std::vector<int>>* maze)
+void RandomSolver(std::vector<std::vector<int>> *maze)
 {
     std::random_device seed;
     std::mt19937 random(seed());
 
-    std::vector<void (*)(std::vector<std::vector<int>> *)> solversAlgorithms = 
-    {
+    std::vector<void (*)(std::vector<std::vector<int>> *)> solversAlgorithms = {
         BreadthFirst,
         BidirectionalBFS,
         AStar,

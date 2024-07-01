@@ -3,51 +3,47 @@
 
 void BreadthFirst(std::vector<std::vector<int>> *maze)
 {
+    std::vector<std::vector<bool>> isVisited((*maze).size(), std::vector<bool>((*maze)[0].size(), false));
+    std::vector<std::vector<std::pair<int, int>>> prev((*maze).size(), std::vector<std::pair<int, int>>((*maze)[0].size(), {-1, -1}));
+    std::queue<std::pair<int, int>> queue;
+    std::vector<std::pair<int, int>> directions = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+
     int entry = FindEntryExit(maze).first;
     int exit = FindEntryExit(maze).second;
 
-    std::vector<std::vector<bool>> visited((*maze).size(), std::vector<bool>((*maze)[0].size(), false));
-    std::vector<std::vector<std::pair<int, int>>> prev((*maze).size(), std::vector<std::pair<int, int>>((*maze)[0].size(), {-1, -1}));
-    std::queue<std::pair<int, int>> queue;
-    std::vector<std::pair<int, int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-
     queue.push({entry, 0});
-    visited[entry][0] = true;
+    isVisited[entry][0] = true;
 
     while (!queue.empty())
     {
-        int currentY = queue.front().first;
-        int currentX = queue.front().second;
+        std::pair<int, int> current = queue.front();
         queue.pop();
 
         // Check if the exit has been reached
-        if (currentX == (*maze)[0].size() - 1 && currentY == exit)
+        if (current.first == exit && current.second == (*maze)[0].size() - 1)
         {
             // Trace back to mark the path
-            while (currentX != -1 && currentY != -1)
+            while (current.first != -1 && current.second != -1)
             {
-                (*maze)[currentY][currentX] = 2147483646;
-                std::pair<int, int> prevCell = prev[currentY][currentX];
-                currentY = prevCell.first;
-                currentX = prevCell.second;
+                (*maze)[current.first][current.second] = 2147483646;
+                std::pair<int, int> prevCell = prev[current.first][current.second];
+                current = prevCell;
             }
+
             return;
         }
 
         // Explore neighboring cells
-        for (const std::pair<int, int>& dir : directions)
+        for (const std::pair<int, int> &dir : directions)
         {
-            int nextY = currentY + dir.first;
-            int nextX = currentX + dir.second;
+            int nextY = current.first + dir.first;
+            int nextX = current.second + dir.second;
 
-            if (nextX >= 0 && nextX < (*maze)[0].size() && nextY >= 0 && nextY < (*maze).size())
+            if (InLimits(maze, {nextY, nextX}) && (*maze)[nextY][nextX] != -1 && !isVisited[nextY][nextX])
             {
-                if ((*maze)[nextY][nextX] != -1 && !visited[nextY][nextX])
-                {
-                    queue.push({nextY, nextX});
-                    visited[nextY][nextX] = true;
-                    prev[nextY][nextX] = {currentY, currentX};
-                }
+                queue.push({nextY, nextX});
+                isVisited[nextY][nextX] = true;
+                prev[nextY][nextX] = current;
             }
         }
     }

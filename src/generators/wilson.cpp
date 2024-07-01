@@ -7,7 +7,7 @@ void Wilson(std::vector<std::vector<int>> *maze)
     std::mt19937 random(seed());
 
     std::vector<std::vector<bool>> isIncluded((*maze).size(), std::vector<bool>((*maze)[0].size(), false));
-    std::vector<std::pair<int, int>> directions = {{2, 0}, {0, 2}, {-2, 0}, {0, -2}};
+    std::vector<std::pair<int, int>> directions = {{-2, 0}, {0, 2}, {2, 0}, {0, -2}};
     std::vector<std::pair<int, int>> cellList;
 
     Fill(maze);
@@ -21,7 +21,7 @@ void Wilson(std::vector<std::vector<int>> *maze)
         }
     }
 
-    std::pair<int, int> start = RandomStart(maze);
+    std::pair<int, int> start = RandomCell(maze);
     (*maze)[start.first][start.second] = 0;
     isIncluded[start.first][start.second] = true;
 
@@ -42,11 +42,10 @@ void Wilson(std::vector<std::vector<int>> *maze)
             {
                 int nextY = path.back().first + dir.first;
                 int nextX = path.back().second + dir.second;
-                std::pair<int, int> nextCell = {nextY, nextX};
 
-                if (nextY > 0 && nextY < (*maze).size() - 1 && nextX > 0 && nextX < (*maze)[0].size() - 1)
+                if (InLimits(maze, {nextY, nextX}))
                 {
-                    path.push_back(nextCell);
+                    path.push_back({nextY, nextX});
                     break;
                 }
             }
@@ -62,15 +61,15 @@ void Wilson(std::vector<std::vector<int>> *maze)
 
         while (!queue.empty())
         {
-            std::pair<int, int> cell = queue.front();
+            std::pair<int, int> current = queue.front();
             queue.pop();
 
-            int currentValue = (*maze)[cell.first][cell.second];
+            int currentValue = (*maze)[current.first][current.second];
 
             for (auto &dir : directions)
             {
-                int nextY = cell.first + dir.first;
-                int nextX = cell.second + dir.second;
+                int nextY = current.first + dir.first;
+                int nextX = current.second + dir.second;
                 std::pair<int, int> nextCell = {nextY, nextX};
 
                 if (std::find(path.begin(), path.end(), nextCell) != path.end() && !hasChanged[nextY][nextX])
@@ -89,32 +88,32 @@ void Wilson(std::vector<std::vector<int>> *maze)
         }
 
         // Trace and mark the path as part of the maze
-        std::pair<int, int> cell = path[0];
-        int currentValue = (*maze)[cell.first][cell.second];
+        std::pair<int, int> current = path[0];
+        int currentValue = (*maze)[current.first][current.second];
 
-        (*maze)[cell.first][cell.second] = 0;
-        isIncluded[cell.first][cell.second] = true;
+        (*maze)[current.first][current.second] = 0;
+        isIncluded[current.first][current.second] = true;
 
-        cellList.erase(std::remove(cellList.begin(), cellList.end(), cell), cellList.end());
+        cellList.erase(std::remove(cellList.begin(), cellList.end(), current), cellList.end());
 
         while (currentValue < 0)
         {
             for (auto &dir : directions)
             {
-                int nextY = cell.first + dir.first;
-                int nextX = cell.second + dir.second;
+                int nextY = current.first + dir.first;
+                int nextX = current.second + dir.second;
                 std::pair<int, int> nextCell = {nextY, nextX};
 
                 if (std::find(path.begin(), path.end(), nextCell) != path.end() && (*maze)[nextY][nextX] == currentValue + 1)
                 {
-                    (*maze)[(cell.first + nextY) / 2][(cell.second + nextX) / 2] = 0;
-                    isIncluded[(cell.first + nextY) / 2][(cell.second + nextX) / 2] = true;
+                    (*maze)[(current.first + nextY) / 2][(current.second + nextX) / 2] = 0;
+                    isIncluded[(current.first + nextY) / 2][(current.second + nextX) / 2] = true;
                     (*maze)[nextY][nextX] = 0;
                     isIncluded[nextY][nextX] = true;
 
                     cellList.erase(std::remove(cellList.begin(), cellList.end(), nextCell), cellList.end());
 
-                    cell = nextCell;
+                    current = nextCell;
                     currentValue += 1;
                     break;
                 }

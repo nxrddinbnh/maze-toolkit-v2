@@ -4,13 +4,12 @@
 #include "../../include/generators/kruskal.hpp"
 #include "../../include/generators/wilson.hpp"
 
-void RandomGenerator(std::vector<std::vector<int>>* maze)
+void RandomGenerator(std::vector<std::vector<int>> *maze)
 {
     std::random_device seed;
     std::mt19937 random(seed());
 
-    std::vector<void (*)(std::vector<std::vector<int>> *)> generatorsAlgorithms = 
-    {
+    std::vector<void (*)(std::vector<std::vector<int>> *)> generatorsAlgorithms = {
         DepthFirstSearch,
         RecursiveDivision,
         Kruskal,
