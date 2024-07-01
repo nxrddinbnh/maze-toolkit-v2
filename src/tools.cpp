@@ -133,7 +133,7 @@ void PrintMaze(std::vector<std::vector<int>> *maze)
     {
         for (int x = 0; x < (*maze)[0].size(); x++)
         {
-            if ((*maze)[y][x] <= -1)
+            if ((*maze)[y][x] <= -3 || (*maze)[y][x] == -1)
             {
                 std::cout << "# "; // Walls
             }
