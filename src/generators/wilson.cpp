@@ -88,27 +88,6 @@ void Wilson(std::vector<std::vector<int>> *maze)
             }
         }
 
-        // ------------------------------------------------------------------------- DEBUG
-        // // Numbers
-        // for (int ytemp = 0; ytemp < (*maze).size(); ytemp++)
-        // {
-        //     for (int xtemp = 0; xtemp < (*maze)[0].size(); xtemp++)
-        //     {
-        //         std::cout << (*maze)[ytemp][xtemp] << " ";
-        //     }
-        //     std::cout << std::endl;
-        // }
-        // // hasChanged
-        // for (int ytemp = 0; ytemp < (*maze).size(); ytemp++)
-        // {
-        //     for (int xtemp = 0; xtemp < (*maze)[0].size(); xtemp++)
-        //     {
-        //         std::cout << hasChanged[ytemp][xtemp] << " ";
-        //     }
-        //     std::cout << std::endl;
-        // }
-        // -------------------------------------------------------------------------
-
         // Trace and mark the path as part of the maze
         std::pair<int, int> current = path[0];
         int currentValue = (*maze)[current.first][current.second];
@@ -126,9 +105,7 @@ void Wilson(std::vector<std::vector<int>> *maze)
                 int nextX = current.second + dir.second;
                 std::pair<int, int> nextCell = {nextY, nextX};
 
-                if (std::find(path.begin(), path.end(), nextCell) != path.end() &&
-                    (*maze)[nextY][nextX] == currentValue + 1 &&
-                    hasChanged[nextY][nextX])
+                if (std::find(path.begin(), path.end(), nextCell) != path.end() && (*maze)[nextY][nextX] == currentValue + 1)
                 {
                     (*maze)[(current.first + nextY) / 2][(current.second + nextX) / 2] = 0;
                     isIncluded[(current.first + nextY) / 2][(current.second + nextX) / 2] = true;
@@ -139,11 +116,6 @@ void Wilson(std::vector<std::vector<int>> *maze)
 
                     current = nextCell;
                     currentValue += 1;
-
-                    // -------------------------------------------------------------------------
-                    // PrintMaze(maze);
-                    // -------------------------------------------------------------------------
-
                     break;
                 }
             }
