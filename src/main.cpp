@@ -13,11 +13,12 @@ int main()
     // Choose generator algorithm
     std::cout << "Choose the algorithm to generate the maze :" << std::endl;
     std::cout << "(1) Depth-First Search" << std::endl;
-    std::cout << "(2) Recursive Division" << std::endl;
-    std::cout << "(3) Kruskal" << std::endl;
-    std::cout << "(4) Wilson" << std::endl;
-    std::cout << "(5) Binary Tree" << std::endl;
-    std::cout << "(6) Random Selection" << std::endl;
+    std::cout << "(2) Kruskal" << std::endl;
+    std::cout << "(3) Wilson" << std::endl;
+    std::cout << "(4) Binary Tree" << std::endl;
+    std::cout << "(5) Side Winder" << std::endl;
+    std::cout << "(6) Recursive Division" << std::endl;
+    std::cout << "(7) Random Selection" << std::endl;
     std::cin >> algorithm;
 
     // Set maze dimensions

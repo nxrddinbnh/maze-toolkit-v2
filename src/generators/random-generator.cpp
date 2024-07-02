@@ -4,6 +4,7 @@
 #include "../../include/generators/kruskal.hpp"
 #include "../../include/generators/wilson.hpp"
 #include "../../include/generators/binary-tree.hpp"
+#include "../../include/generators/side-winder.hpp"
 
 void RandomGenerator(std::vector<std::vector<int>> *maze)
 {
@@ -12,10 +13,11 @@ void RandomGenerator(std::vector<std::vector<int>> *maze)
 
     std::vector<void (*)(std::vector<std::vector<int>> *)> generatorsAlgorithms = {
         DepthFirstSearch,
-        RecursiveDivision,
         Kruskal,
         Wilson,
         BinaryTree,
+        SideWinder,
+        RecursiveDivision,
     };
 
     std::uniform_int_distribution<int> chooseAlgo(0, generatorsAlgorithms.size() - 1);
