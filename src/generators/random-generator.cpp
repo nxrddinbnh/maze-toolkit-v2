@@ -3,6 +3,7 @@
 #include "../../include/generators/recursive-division.hpp"
 #include "../../include/generators/kruskal.hpp"
 #include "../../include/generators/wilson.hpp"
+#include "../../include/generators/binary-tree.hpp"
 
 void RandomGenerator(std::vector<std::vector<int>> *maze)
 {
@@ -14,6 +15,7 @@ void RandomGenerator(std::vector<std::vector<int>> *maze)
         RecursiveDivision,
         Kruskal,
         Wilson,
+        BinaryTree,
     };
 
     std::uniform_int_distribution<int> chooseAlgo(0, generatorsAlgorithms.size() - 1);
