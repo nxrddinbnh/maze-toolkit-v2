@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+
+:root {
+    --mt-grey: #828394;
+    --mt-blue-100: #02a5e1;
+    --mt-blue-200: #314dee;
+    --mt-blue-300: #121b63;
+    --mt-blue-400: #000212;
+    --mt-blue-hover: rgba(2, 165, 225, .83);
+    --font-main: 'Fira Code', monospace;
+    --font-pixel: 'Pixelify Sans', sans-serif;
+}
+
+::selection {
+    color: var(--mt-blue-100);
+    background-color: #fff;
+}
+
+::-moz-selection,
+::-webkit-selection {
+    color: var(--mt-blue-100);
+    background-color: #fff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(to top right, var(--mt-blue-400) 50%, var(--mt-blue-300));
+    font-family: var(--font-main);
+    overflow: hidden;
+}
+
+main {
+    display: flex;
+    height: 100vh;
+}
+
+aside {
+    max-width: 25em;
+    padding: 20px 30px;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+aside #mtLogo {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    text-decoration: none;
+    font-family: var(--font-pixel);
+    font-size: 15pt;
+    color: #fff;
+}
+
+aside #mtLogo img {
+    width: 30px;
+    height: auto;
+    transition: transform 0.3s ease-in-out;
+}
+
+aside #mtLogo:hover img {
+    transform: scale(1.10) rotate(3deg);
+}
+
+
+aside header {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    flex: 1
+}
+
+aside .settings {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+aside header label {
+    color: var(--mt-grey);
+    margin-bottom: 5px;
+}
+
+aside select,
+aside button {
+    width: 280px;
+    height: 40px;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    cursor: pointer;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: .15s ease-in-out;
+}
+
+aside select:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+aside button {
+    color: #fff;
+    border: none;
+    background-color: var(--mt-blue-100);
+}
+
+aside button:hover {
+    background-color: var(--mt-blue-hover);
+}
+
+footer {
+    font-size: 1rem;
+    color: var(--mt-grey);
+    text-align: center;
+}
+
+footer a {
+    color: var(--mt-blue-100);
+    text-decoration: none;
+    transition: .15s ease-in-out;
+}
+
+footer a:hover {
+    text-decoration: underline;
+    color: #fff;
+}
+
+section {
+    width: 100%;
+    padding: 20px 30px;
+}
+
+#maze {
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    grid-auto-rows: 1fr;
+}
+
+#maze .cell {
+    background-color: var(--mt-blue-300);
+    border: 1px solid var(--mt-blue-300);
+}
+
+#maze .wall {
+    background: var(--mt-blue-100);
+    border: none;
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--mt-blue-200);
+    opacity: 0.8;
+    pointer-events: none;
+    width: 5px;
+    height: 5px;
+    z-index: -50;
+}
