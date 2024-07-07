@@ -8,6 +8,9 @@
     --mt-blue-300: #121b63;
     --mt-blue-400: #000212;
     --mt-blue-hover: rgba(2, 165, 225, .83);
+    --mt-blue-border: #0a1730;
+    --mt-red-100: #e10202;
+    --mt-red-200: #e10202c4;
     --font-main: 'Fira Code', monospace;
     --font-pixel: 'Pixelify Sans', sans-serif;
 }
@@ -45,12 +48,14 @@ aside {
     max-width: 25em;
     padding: 20px 30px;
     background-color: rgba(0, 0, 0, 0.4);
+    border-right: 1px solid var(--mt-blue-border);
     display: flex;
     flex-direction: column;
     gap: 50px;
 }
 
 aside #mtLogo {
+    width: fit-content;
     display: flex;
     gap: 10px;
     align-items: center;
@@ -70,7 +75,6 @@ aside #mtLogo:hover img {
     transform: scale(1.10) rotate(3deg);
 }
 
-
 aside header {
     display: flex;
     flex-direction: column;
@@ -78,19 +82,19 @@ aside header {
     flex: 1
 }
 
-aside .settings {
+header .settings {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-aside header label {
+header label {
     color: var(--mt-grey);
     margin-bottom: 5px;
 }
 
-aside select,
-aside button {
+header select,
+header button {
     width: 280px;
     height: 40px;
     padding: .375rem .75rem;
@@ -106,19 +110,32 @@ aside button {
     transition: .15s ease-in-out;
 }
 
-aside select:focus {
+header button:disabled,
+header select:disabled {
+    cursor: not-allowed;
+}
+
+header select:focus {
     outline: none;
     box-shadow: none;
 }
 
-aside button {
+header button {
     color: #fff;
     border: none;
     background-color: var(--mt-blue-100);
 }
 
-aside button:hover {
+header button:hover {
     background-color: var(--mt-blue-hover);
+}
+
+header #stopButton {
+    background-color: var(--mt-red-100);
+}
+
+header #stopButton:hover {
+    background-color: var(--mt-red-200);
 }
 
 footer {
@@ -139,25 +156,48 @@ footer a:hover {
 }
 
 section {
+    display: flex;
     width: 100%;
-    padding: 20px 30px;
+    padding: 20px;
 }
 
 #maze {
-    height: 100%;
     display: grid;
-    grid-template-columns: repeat(15, 1fr);
-    grid-auto-rows: 1fr;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 #maze .cell {
-    background-color: var(--mt-blue-300);
-    border: 1px solid var(--mt-blue-300);
+    background-color: var(--mt-blue-400);
+    border: 1px solid var(--mt-blue-border);
+    cursor: pointer;
 }
 
 #maze .wall {
     background: var(--mt-blue-100);
     border: none;
+}
+
+@keyframes scaleBounce {
+    0% {
+        transform: scale(.3);
+        opacity: .75;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: .9;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.cell.wallAnimation {
+    animation: scaleBounce .5s;
 }
 
 .particle {

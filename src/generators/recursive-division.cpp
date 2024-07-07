@@ -10,6 +10,7 @@ void RecursiveDivision(std::vector<std::vector<int>> *maze)
     int minX = 1;
     int minY = 1;
 
+    ClearCellOrder();
     Enclose(maze);
 
     // Recursive function to divide the maze
@@ -57,7 +58,7 @@ void RecursiveDivision(std::vector<std::vector<int>> *maze)
                 do
                 {
                     y = rand() % ((newMaxY - 1) - (newMinY + 1) + 1) + (newMinY + 1);
-                } while (y % 2 == 1 || abs(y - lastY) < 2);
+                } while (y % 2 == 1 || std::abs(y - lastY) < 2);
 
                 lastY = y;
 
@@ -72,6 +73,7 @@ void RecursiveDivision(std::vector<std::vector<int>> *maze)
                     if (j != hole)
                     {
                         (*maze)[y][j] = -1;
+                        AddCellToOrder(y, j);
                     }
                 }
             }
@@ -99,6 +101,7 @@ void RecursiveDivision(std::vector<std::vector<int>> *maze)
                 if (j != hole)
                 {
                     (*maze)[j][x] = -1;
+                    AddCellToOrder(j, x);
                 }
             }
 

@@ -1,26 +1,3 @@
-# Binary and build files
-/bin/
-/build/
-
-# Editor configuration files
 .vscode/
-
-# Temporary files
-*.tmp
-*.log
-
-# Executables and libraries
-*.exe
-*.out
-*.app
-*.dylib
-*.so
-*.a
-*.lib
-*.dll
-
-# Generated documentation
-/docs/
-
-# Test results
-/tests/
+bin/
+emsdk/

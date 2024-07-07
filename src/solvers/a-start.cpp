@@ -45,8 +45,10 @@ void AStar(std::vector<std::vector<int>> *maze)
             // Check boundaries and if the next cell is passable and not visited
             if (InLimits(maze, {nextY, nextX}) && (*maze)[nextY][nextX] != -1)
             {
+                int width = (*maze)[0].size() - 1;
+
                 int costFromStart = currentCost + 1;
-                int heuristic = abs(nextY - exit) + abs(nextX - ((*maze)[0].size() - 1));
+                int heuristic = std::abs(nextY - exit) + std::abs(nextX - width);
                 int totalCost = costFromStart + heuristic;
 
                 // Update if found a shorter path or the node is being visited for the first time

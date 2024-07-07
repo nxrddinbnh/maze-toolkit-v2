@@ -11,10 +11,12 @@ void DepthFirstSearch(std::vector<std::vector<int>> *maze)
     std::vector<std::pair<int, int>> directions = {{-2, 0}, {0, 2}, {2, 0}, {0, -2}};
     std::pair<int, int> start = RandomCell(maze);
 
-    Grid(maze);
+    ClearCellOrder();
+    Fill(maze);
 
     isVisited[start.first][start.second] = true;
     stack.push(start);
+    AddCellToOrder(start.first, start.second);
 
     while (!stack.empty())
     {
@@ -32,8 +34,11 @@ void DepthFirstSearch(std::vector<std::vector<int>> *maze)
             {
                 (*maze)[(current.first + nextY) / 2][(current.second + nextX) / 2] = 0;
                 isVisited[(current.first + nextY) / 2][(current.second + nextX) / 2] = true;
+                AddCellToOrder((current.first + nextY) / 2, (current.second + nextX) / 2);
+
                 (*maze)[nextY][nextX] = 0;
                 isVisited[nextY][nextX] = true;
+                AddCellToOrder(nextY, nextX);
 
                 stack.push(std::make_pair(nextY, nextX));
                 isFound = true;

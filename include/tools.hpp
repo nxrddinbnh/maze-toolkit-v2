@@ -3,6 +3,10 @@
 #include <iostream>
 #include <random>
 
+void AddCellToOrder(int y, int x);
+int GetCellOrderSize();
+std::pair<int, int> GetCellOrder(int index);
+void ClearCellOrder();
 bool InLimits(std::vector<std::vector<int>> *maze, std::pair<int, int> cell);
 std::pair<int, int> RandomCell(std::vector<std::vector<int>> *maze);
 void SetEntryExit(std::vector<std::vector<int>> *maze);

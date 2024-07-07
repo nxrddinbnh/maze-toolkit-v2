@@ -1,76 +1,66 @@
 #include "../include/generate-maze.hpp"
 #include "../include/solve-maze.hpp"
 #include "../include/tools.hpp"
-#include <iostream>
+#include <emscripten/emscripten.h>
 #include <vector>
 
-int main()
+#define EXTERN extern "C"
+
+std::vector<std::vector<int>> maze;
+
+EXTERN EMSCRIPTEN_KEEPALIVE void generateMaze(int width, int height, int algorithm)
 {
-    int algorithm;
-    int width, height;
-    std::string answer;
+    maze = std::vector<std::vector<int>>(height, std::vector<int>(width, 0));
+    GenerateMaze(&maze, &algorithm);
+}
 
-    // Choose generator algorithm
-    std::cout << "Choose the algorithm to generate the maze :" << std::endl;
-    std::cout << "(1) Depth-First Search" << std::endl;
-    std::cout << "(2) Kruskal" << std::endl;
-    std::cout << "(3) Wilson" << std::endl;
-    std::cout << "(4) Recursive Division" << std::endl;
-    std::cout << "(5) Binary Tree" << std::endl;
-    std::cout << "(6) Side Winder" << std::endl;
-    std::cout << "(7) Random Selection" << std::endl;
-    std::cin >> algorithm;
+EXTERN EMSCRIPTEN_KEEPALIVE void solveMaze(int algorithm)
+{
+    SolveMaze(&maze, &algorithm);
+}
 
-    // Set maze dimensions
-    std::cout << std::endl;
-    std::cout << "Enter the size of the maze (width, height) : ";
-    std::cin >> width >> height;
-
-    if (width % 2 == 0 || height % 2 == 0)
+EXTERN EMSCRIPTEN_KEEPALIVE int getTypeCell(int y, int x)
+{
+    if (InLimits(&maze, {y, x}))
     {
-        if (width % 2 == 0)
-        {
-            width++;
-        }
-
-        if (height % 2 == 0)
-        {
-            height++;
-        }
-
-        std::cout << "(!) Maze dimensions must be odd. Your maze is set to " << width << "x" << height << std::endl;
+        return maze[y][x];
     }
 
-    std::cout << std::endl;
+    return -1;
+}
 
-    // Generate maze
-    std::vector<std::vector<int>> maze(height, std::vector<int>(width, 0));
-    std::cout << "Generating maze of size " << width << "x" << height << " using algorithm " << algorithm << "..." << std::endl;
-    GenerateMaze(&maze, &algorithm);
-
-    // Print maze
-    std::cout << "Maze generated successfully!" << std::endl;
-    PrintMaze(&maze);
-
-    // Solve maze
-    std::cout << "Would you like me to solve the maze? (Yes / No) : ";
-    std::cin >> answer;
-
-    if (answer == "y" || answer == "Y" || answer == "1" || answer == "Yes" || answer == "yes")
+EXTERN EMSCRIPTEN_KEEPALIVE void setTypeCell(int y, int x, int newType)
+{
+    if (InLimits(&maze, {y, x}))
     {
-        // Choose solver algorithm
-        std::cout << std::endl;
-        std::cout << "Choose the algorithm to solve the maze :" << std::endl;
-        std::cout << "(1) Breadth-First" << std::endl;
-        std::cout << "(2) Bidirectional BFS" << std::endl;
-        std::cout << "(3) A*" << std::endl;
-        std::cout << "(4) Random Selection" << std::endl;
-        std::cin >> algorithm;
+        maze[y][x] = newType;
+    }
+}
 
-        std::cout << std::endl;
-        std::cout << "Solving maze..." << std::endl;
+EXTERN EMSCRIPTEN_KEEPALIVE int getCellOrderSize()
+{
+    return GetCellOrderSize();
+}
 
-        SolveMaze(&maze, &algorithm);
-        PrintMaze(&maze);
+EXTERN EMSCRIPTEN_KEEPALIVE void getCellOrder(int index, int *y, int *x)
+{
+    std::pair<int, int> cell = GetCellOrder(index);
+    *y = cell.first;
+    *x = cell.second;
+}
+
+EXTERN EMSCRIPTEN_KEEPALIVE void prepareMaze(int type)
+{
+    if (type == 1)
+    {
+        Enclose(&maze);
+    }
+    else if (type == 2)
+    {
+        Grid(&maze);
+    }
+    else if (type == 3)
+    {
+        Fill(&maze);
     }
 }

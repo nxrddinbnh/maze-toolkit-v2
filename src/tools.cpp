@@ -1,5 +1,27 @@
 #include "../include/tools.hpp"
 
+std::vector<std::pair<int, int>> cellOrder;
+
+void AddCellToOrder(int y, int x)
+{
+    cellOrder.push_back(std::make_pair(y, x));
+}
+
+int GetCellOrderSize()
+{
+    return cellOrder.size();
+}
+
+std::pair<int, int> GetCellOrder(int index)
+{
+    return cellOrder[index];
+}
+
+void ClearCellOrder()
+{
+    cellOrder.clear();
+}
+
 bool InLimits(std::vector<std::vector<int>> *maze, std::pair<int, int> cell)
 {
     bool inLimits = false;
@@ -82,16 +104,19 @@ std::pair<int, int> FindEntryExit(std::vector<std::vector<int>> *maze)
 
 void Enclose(std::vector<std::vector<int>> *maze)
 {
-    for (int i = 0; i < (*maze).size(); i++)
+    for (int y = 0; y < (*maze).size(); y++)
     {
-        (*maze)[i][0] = -1;
-        (*maze)[i][(*maze)[0].size() - 1] = -1;
-    }
-
-    for (int i = 0; i < (*maze)[0].size(); i++)
-    {
-        (*maze)[0][i] = -1;
-        (*maze)[(*maze).size() - 1][i] = -1;
+        for (int x = 0; x < (*maze)[0].size(); x++)
+        {
+            if (x == 0 || x == (*maze)[0].size() - 1 || y == 0 || y == (*maze).size() - 1)
+            {
+                (*maze)[y][x] = -1;
+            }
+            else
+            {
+                (*maze)[y][x] = 0;
+            }
+        }
     }
 }
 

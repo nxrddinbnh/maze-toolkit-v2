@@ -10,6 +10,7 @@ void Wilson(std::vector<std::vector<int>> *maze)
     std::vector<std::pair<int, int>> directions = {{-2, 0}, {0, 2}, {2, 0}, {0, -2}};
     std::vector<std::pair<int, int>> cellList;
 
+    ClearCellOrder();
     Fill(maze);
 
     // Collect all the mandatory cells to visit
@@ -23,6 +24,7 @@ void Wilson(std::vector<std::vector<int>> *maze)
 
     std::pair<int, int> start = RandomCell(maze);
     (*maze)[start.first][start.second] = 0;
+    AddCellToOrder(start.first, start.second);
     isIncluded[start.first][start.second] = true;
 
     cellList.erase(std::remove(cellList.begin(), cellList.end(), start), cellList.end());
@@ -93,6 +95,7 @@ void Wilson(std::vector<std::vector<int>> *maze)
         int currentValue = (*maze)[current.first][current.second];
 
         (*maze)[current.first][current.second] = 0;
+        AddCellToOrder(current.first, current.second);
         isIncluded[current.first][current.second] = true;
 
         cellList.erase(std::remove(cellList.begin(), cellList.end(), current), cellList.end());
@@ -108,8 +111,11 @@ void Wilson(std::vector<std::vector<int>> *maze)
                 if (std::find(path.begin(), path.end(), nextCell) != path.end() && (*maze)[nextY][nextX] == currentValue + 1)
                 {
                     (*maze)[(current.first + nextY) / 2][(current.second + nextX) / 2] = 0;
+                    AddCellToOrder((current.first + nextY) / 2, (current.second + nextX) / 2);
                     isIncluded[(current.first + nextY) / 2][(current.second + nextX) / 2] = true;
+
                     (*maze)[nextY][nextX] = 0;
+                    AddCellToOrder(nextY, nextX);
                     isIncluded[nextY][nextX] = true;
 
                     cellList.erase(std::remove(cellList.begin(), cellList.end(), nextCell), cellList.end());

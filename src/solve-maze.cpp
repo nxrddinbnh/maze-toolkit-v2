@@ -1,6 +1,5 @@
 #include "../include/solve-maze.hpp"
 #include "../include/solvers/breadth-first.hpp"
-#include "../include/solvers/random-solver.hpp"
 #include "../include/solvers/bidirectional-bfs.hpp"
 #include "../include/solvers/a-start.hpp"
 
@@ -11,14 +10,9 @@ void SolveMaze(std::vector<std::vector<int>> *maze, int *algorithm)
     algorithms.push_back(BreadthFirst);
     algorithms.push_back(BidirectionalBFS);
     algorithms.push_back(AStar);
-    algorithms.push_back(RandomSolver);
 
     if ((*algorithm - 1) < algorithms.size())
     {
         algorithms[*algorithm - 1](maze);
-    }
-    else
-    {
-        algorithms[algorithms.size() - 1](maze);
     }
 }
