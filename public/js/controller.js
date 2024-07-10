@@ -83,10 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	generatorSpeedSelect.selectedIndex = 1;
 	solverSpeedSelect.selectedIndex = 1;
 
-	initializeMazeUI(mazeContainer);
-	window.addEventListener('resize', onResize);
-	setMouseEvents(mazeContainer, generatorSelect);
-
 	generateButton.addEventListener('click', () => {
 		prepareMaze();
 		Module.ccall('generateMaze', null, ['number'], [getGeneratorAlgo()]);
@@ -147,4 +143,15 @@ document.addEventListener('DOMContentLoaded', () => {
 			generateButton.disabled = false;
 		}
 	});
+
+	initializeMazeUI(mazeContainer);
+	window.addEventListener('resize', onResize);
+	setMouseEvents(mazeContainer, generatorSelect);
+
+	// Make sure that the cells are created
+	setTimeout(() => {
+		if (mazeContainer.children.length === 0) {
+			location.reload();
+		}
+	}, 100);
 });
