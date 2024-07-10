@@ -53,18 +53,21 @@
                     </select>
     
                     <select name="speedSolver" id="speedSolver">
-                        <option value="fastest">Fastest</option>
-                        <option value="x4">x4</option>
-                        <option value="x2">x2</option>
-                        <option value="x1">x1</option>
-                        <option value="x0.5">x0.5</option>
-                        <option value="x0.1">x0.1</option>
+                        <option value="1">Fastest</option>
+                        <option value="2">x4</option>
+                        <option value="3">x2</option>
+                        <option value="4">x1</option>
+                        <option value="5">x0.5</option>
+                        <option value="6">x0.1</option>
                     </select>
     
                     <button id="solveButton" title="Solve Maze">Solve</button>
                 </div>
 
-                <button id="stopButton">Stop</button>
+                <div class="moreButtons">
+                    <button id="clearButton" title="Solve Maze">Clear</button>
+                    <button id="stopButton">Stop</button>
+                </div>
             </header>
 
             <footer>
@@ -81,11 +84,20 @@
             <div id="maze"></div>
         </section>
 
+        <div id="toast" class="toastInfo">
+            <div class="toastContent">
+                <object class="toastIcon" data="" type="image/svg+xml"></object>
+                <div>
+                    <div class="toastTitle">Title</div>
+                    <div class="toastMessage">Message</div>
+                </div>
+            </div>
+        </div>
+        
         <div id="particles"></div>
     </main>
 
-    <script src="js/particles.js"></script>
-    <script src="js/controller.js"></script>
-    <script src="../bin/maze-toolkit.js"></script>
+    <script type="module" src="js/controller.js"></script>
+    <script src="js/maze-toolkit.js"></script>
 </body>
 </html>

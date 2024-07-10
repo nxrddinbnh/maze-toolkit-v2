@@ -111,5 +111,4 @@ void RecursiveDivision(std::vector<std::vector<int>> *maze)
     };
 
     Division(minX, maxX, minY, maxY);
-    SetEntryExit(maze);
 }

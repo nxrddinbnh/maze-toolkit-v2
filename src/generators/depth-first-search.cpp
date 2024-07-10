@@ -14,6 +14,7 @@ void DepthFirstSearch(std::vector<std::vector<int>> *maze)
     ClearCellOrder();
     Fill(maze);
 
+    (*maze)[start.first][start.second] = 0;
     isVisited[start.first][start.second] = true;
     stack.push(start);
     AddCellToOrder(start.first, start.second);
@@ -52,6 +53,4 @@ void DepthFirstSearch(std::vector<std::vector<int>> *maze)
             stack.pop();
         }
     }
-
-    SetEntryExit(maze);
 }

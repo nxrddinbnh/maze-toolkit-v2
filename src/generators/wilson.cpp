@@ -127,6 +127,4 @@ void Wilson(std::vector<std::vector<int>> *maze)
             }
         }
     }
-
-    SetEntryExit(maze);
 }

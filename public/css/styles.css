@@ -2,15 +2,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
 
 :root {
-    --mt-grey: #828394;
-    --mt-blue-100: #02a5e1;
+    --mt-grey-100: #a3aec9;
+    --mt-grey-200: #828394;
+    --mt-blue-100: #20a7f2;
     --mt-blue-200: #314dee;
     --mt-blue-300: #121b63;
     --mt-blue-400: #000212;
     --mt-blue-hover: rgba(2, 165, 225, .83);
     --mt-blue-border: #0a1730;
-    --mt-red-100: #e10202;
-    --mt-red-200: #e10202c4;
+    --mt-red-100: #f84f54;
+    --mt-red-200: #e10202;
+    --mt-red-300: #e10202c4;
+    --mt-green-100: #3dbe58;
+    --mt-green-200: #309746;
+    --mt-yellow-100: #ffff00;
+    --mt-yellow-200: #f3c137;
+    --mt-pink-100: #e1d0fe;
+    --mt-pink-200: #ff43ef;
     --font-main: 'Fira Code', monospace;
     --font-pixel: 'Pixelify Sans', sans-serif;
 }
@@ -78,7 +86,7 @@ aside #mtLogo:hover img {
 aside header {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 50px;
     flex: 1
 }
 
@@ -89,7 +97,7 @@ header .settings {
 }
 
 header label {
-    color: var(--mt-grey);
+    color: var(--mt-grey-200);
     margin-bottom: 5px;
 }
 
@@ -113,6 +121,7 @@ header button {
 header button:disabled,
 header select:disabled {
     cursor: not-allowed;
+    opacity: 0.5;
 }
 
 header select:focus {
@@ -130,17 +139,31 @@ header button:hover {
     background-color: var(--mt-blue-hover);
 }
 
+header .moreButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+header #clearButton {
+    background-color: var(--mt-green-100);
+}
+
+header #clearButton:hover {
+    background-color: var(--mt-green-200);
+}
+
 header #stopButton {
-    background-color: var(--mt-red-100);
+    background-color: var(--mt-red-200);
 }
 
 header #stopButton:hover {
-    background-color: var(--mt-red-200);
+    background-color: var(--mt-red-300);
 }
 
 footer {
     font-size: 1rem;
-    color: var(--mt-grey);
+    color: var(--mt-grey-200);
     text-align: center;
 }
 
@@ -171,12 +194,50 @@ section {
 #maze .cell {
     background-color: var(--mt-blue-400);
     border: 1px solid var(--mt-blue-border);
+}
+
+#maze button {
     cursor: pointer;
+}
+
+#maze div {
+    user-select: none;
+    pointer-events: none;
+}
+
+#maze button:focus {
+    outline: none;
+    box-shadow: none;
 }
 
 #maze .wall {
     background: var(--mt-blue-100);
     border: none;
+}
+
+#maze .path {
+    background-color: var(--mt-pink-100);
+    border: none;
+}
+
+#maze .entry {
+    background-color: var(--mt-yellow-100);
+    border: 1px solid #fff;
+    cursor: grab;
+}
+
+#maze .exit {
+    background-color: var(--mt-pink-200);
+    border: 1px solid #fff;
+    cursor: grab;
+}
+
+#maze .wallAnimation {
+    animation: scaleBounce .5s;
+}
+
+#maze .dragging {
+    animation: blink .8s infinite;
 }
 
 @keyframes scaleBounce {
@@ -196,8 +257,80 @@ section {
     }
 }
 
-.cell.wallAnimation {
-    animation: scaleBounce .5s;
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+#toast {
+    position: fixed;
+    top: 10px;
+    left: 60%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.4);
+    background-color: #15182b;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+    z-index: 1000;
+    font-size: 13px;
+}
+
+#toast.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+#toast .toastContent {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+#toast .toastIcon {
+    width: 24px;
+    height: 24px;
+}
+
+#toast .toastTitle {
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+#toast .toastMessage {
+    color: var(--mt-grey-100);
+}
+
+#toast.toastSuccess .toastTitle,
+#toast.toastSuccess .toastIcon {
+    color: var(--mt-green-100);
+}
+
+#toast.toastInfo .toastTitle {
+    color: var(--mt-blue-100);
+}
+
+#toast.toastWarning .toastTitle,
+#toast.toastWarning .toastIcon {
+    color: var(--mt-yellow-200);
+}
+
+#toast.toastError .toastTitle,
+#toast.toastError .toastIcon {
+    color: var(--mt-red-100);
 }
 
 .particle {

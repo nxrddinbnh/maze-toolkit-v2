@@ -8,11 +8,13 @@ void BreadthFirst(std::vector<std::vector<int>> *maze)
     std::queue<std::pair<int, int>> queue;
     std::vector<std::pair<int, int>> directions = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
-    int entry = FindEntryExit(maze).first;
-    int exit = FindEntryExit(maze).second;
+    ClearCellOrder();
+    std::pair<int, int> entry = FindEntryExit(maze).first;
+    std::pair<int, int> exit = FindEntryExit(maze).second;
 
-    queue.push({entry, 0});
-    isVisited[entry][0] = true;
+    queue.push(entry);
+    isVisited[entry.first][entry.second] = true;
+    AddCellToOrder(entry.first, entry.second);
 
     while (!queue.empty())
     {
@@ -20,16 +22,21 @@ void BreadthFirst(std::vector<std::vector<int>> *maze)
         queue.pop();
 
         // Check if the exit has been reached
-        if (current.first == exit && current.second == (*maze)[0].size() - 1)
+        if (current == exit)
         {
             // Trace back to mark the path
             while (current.first != -1 && current.second != -1)
             {
-                (*maze)[current.first][current.second] = 2147483646;
-                std::pair<int, int> prevCell = prev[current.first][current.second];
-                current = prevCell;
+                if ((*maze)[current.first][current.second] != 3)
+                {
+                    (*maze)[current.first][current.second] = 2147483646;
+                }
+
+                AddCellToOrder(current.first, current.second);
+                current = prev[current.first][current.second];
             }
 
+            (*maze)[exit.first][exit.second] = 4;
             return;
         }
 
@@ -44,6 +51,7 @@ void BreadthFirst(std::vector<std::vector<int>> *maze)
                 queue.push({nextY, nextX});
                 isVisited[nextY][nextX] = true;
                 prev[nextY][nextX] = current;
+                AddCellToOrder(nextY, nextX);
             }
         }
     }

@@ -13,14 +13,17 @@ void BidirectionalBFS(std::vector<std::vector<int>> *maze)
 
     std::vector<std::pair<int, int>> directions = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
-    int entry = FindEntryExit(maze).first;
-    int exit = FindEntryExit(maze).second;
+    ClearCellOrder();
+    std::pair<int, int> entry = FindEntryExit(maze).first;
+    std::pair<int, int> exit = FindEntryExit(maze).second;
 
-    queueEntry.push({entry, 0});
-    isVisitedEntry[entry][0] = true;
+    queueEntry.push(entry);
+    isVisitedEntry[entry.first][entry.second] = true;
+    AddCellToOrder(entry.first, entry.second);
 
-    queueExit.push({exit, (*maze)[0].size() - 1});
-    isVisitedExit[exit][(*maze)[0].size() - 1] = true;
+    queueExit.push(exit);
+    isVisitedExit[exit.first][exit.second] = true;
+    AddCellToOrder(exit.first, exit.second);
 
     while (!queueEntry.empty() && !queueExit.empty())
     {
@@ -43,6 +46,7 @@ void BidirectionalBFS(std::vector<std::vector<int>> *maze)
                         queueEntry.push({nextY, nextX});
                         isVisitedEntry[nextY][nextX] = true;
                         prevEntry[nextY][nextX] = current;
+                        AddCellToOrder(nextY, nextX);
                     }
                 }
             }
@@ -67,6 +71,7 @@ void BidirectionalBFS(std::vector<std::vector<int>> *maze)
                         queueExit.push({nextY, nextX});
                         isVisitedExit[nextY][nextX] = true;
                         prevExit[nextY][nextX] = current;
+                        AddCellToOrder(nextY, nextX);
                     }
                 }
             }
@@ -85,7 +90,12 @@ void BidirectionalBFS(std::vector<std::vector<int>> *maze)
 
                     while (currentX != -1 && currentY != -1)
                     {
-                        (*maze)[currentY][currentX] = 2147483646;
+                        if ((*maze)[currentY][currentX] != 3)
+                        {
+                            (*maze)[currentY][currentX] = 2147483646;
+                        }
+
+                        AddCellToOrder(currentY, currentX);
                         std::pair<int, int> prevCell = prevEntry[currentY][currentX];
                         currentY = prevCell.first;
                         currentX = prevCell.second;
@@ -97,12 +107,18 @@ void BidirectionalBFS(std::vector<std::vector<int>> *maze)
 
                     while (currentX != -1 && currentY != -1)
                     {
-                        (*maze)[currentY][currentX] = 2147483646;
+                        if ((*maze)[currentY][currentX] != 3)
+                        {
+                            (*maze)[currentY][currentX] = 2147483646;
+                        }
+
+                        AddCellToOrder(currentY, currentX);
                         std::pair<int, int> prevCell = prevExit[currentY][currentX];
                         currentY = prevCell.first;
                         currentX = prevCell.second;
                     }
 
+                    (*maze)[exit.first][exit.second] = 4;
                     return;
                 }
             }

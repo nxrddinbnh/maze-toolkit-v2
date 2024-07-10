@@ -66,40 +66,38 @@ void SetEntryExit(std::vector<std::vector<int>> *maze)
     do
     {
         entry = randomEntryExit(random);
-    } while (entry % 2 == 0);
+    } while (entry % 2 == 0 && (*maze)[entry][1] == -1);
 
     do
     {
         exit = randomEntryExit(random);
-    } while (exit % 2 == 0);
+    } while (exit % 2 == 0 && (*maze)[exit][(*maze)[0].size() - 2] == -1);
 
-    (*maze)[entry][0] = 3;
-    (*maze)[exit][(*maze)[0].size() - 1] = 3;
+    (*maze)[entry][1] = 3;
+    (*maze)[exit][(*maze)[0].size() - 2] = 4;
 }
 
-std::pair<int, int> FindEntryExit(std::vector<std::vector<int>> *maze)
+std::pair<std::pair<int, int>, std::pair<int, int>> FindEntryExit(std::vector<std::vector<int>> *maze)
 {
-    std::pair<int, int> entryExit;
+    std::pair<int, int> entry = {-1, -1};
+    std::pair<int, int> exit = {-1, -1};
 
-    for (int i = 0; i < (*maze).size(); i++)
+    for (int y = 1; y < (*maze).size() - 1; ++y)
     {
-        if ((*maze)[i][0] == 3)
+        for (int x = 1; x < (*maze)[0].size() - 1; ++x)
         {
-            entryExit.first = i;
-            break;
+            if ((*maze)[y][x] == 3)
+            {
+                entry = {y, x};
+            }
+            else if ((*maze)[y][x] == 4)
+            {
+                exit = {y, x};
+            }
         }
     }
 
-    for (int i = 0; i < (*maze).size(); i++)
-    {
-        if ((*maze)[i][(*maze)[0].size() - 1] == 3)
-        {
-            entryExit.second = i;
-            break;
-        }
-    }
-
-    return entryExit;
+    return {entry, exit};
 }
 
 void Enclose(std::vector<std::vector<int>> *maze)

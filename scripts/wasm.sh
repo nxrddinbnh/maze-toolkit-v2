@@ -15,7 +15,7 @@ emcc src/generate-maze.cpp \
      src/solvers/breadth-first.cpp \
      -o bin/maze-toolkit.js \
      -O3 -s NO_EXIT_RUNTIME=1 \
-     -s "EXPORTED_RUNTIME_METHODS=['ccall']" \
-     -s "EXPORTED_FUNCTIONS=['_malloc', '_free']"
+     -s EXPORTED_RUNTIME_METHODS=['ccall'] \
+     -s EXPORTED_FUNCTIONS='["_malloc", "_free"]'
 
 # exec "$SHELL"
