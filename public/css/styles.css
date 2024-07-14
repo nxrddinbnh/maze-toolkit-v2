@@ -398,6 +398,7 @@ section {
         left: -100%;
         background-color: rgba(0, 0, 0, 0.8);
         backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         border: none;
         transition: left 0.3s;
     }

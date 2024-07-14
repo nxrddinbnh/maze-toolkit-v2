@@ -157,9 +157,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	openButton.addEventListener('click', () => {
 		aside.classList.toggle('open');
+		openButton.style.display = 'none';
 	});
 
 	closeButton.addEventListener('click', () => {
 		closeMenu();
+		openButton.style.display = 'flex';
 	});
 });
