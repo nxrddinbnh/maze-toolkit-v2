@@ -343,3 +343,79 @@ section {
     height: 5px;
     z-index: -50;
 }
+
+#openHambMenu,
+#closeHambMenu {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+#openHambMenu {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+#closeHambMenu {
+    position: relative;
+}
+
+#openHambMenu span,
+#closeHambMenu span {
+    width: 100%;
+    height: 3px;
+    background-color: white;
+}
+
+#closeHambMenu span {
+    position: absolute;
+    display: block;
+    transform-origin: center center;
+}
+
+#closeHambMenu span:nth-child(1) {
+    transform: rotate(45deg);
+}
+
+#closeHambMenu span:nth-child(2) {
+    transform: rotate(-45deg);
+}
+
+.logoMenu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media (max-width: 650px) {
+    aside {
+        position: absolute;
+        height: 100%;
+        left: -100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(20px);
+        border: none;
+        transition: left 0.3s;
+    }
+
+    aside.open {
+        left: 0;
+    }
+
+    #openHambMenu,
+    #closeHambMenu {
+        display: flex;
+    }
+
+    #closeHambMenu {
+        justify-content: center;
+    }
+
+    section {
+        margin-left: 40px;
+    }
+}

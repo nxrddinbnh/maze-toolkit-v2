@@ -2,9 +2,11 @@ import { setHasPath } from './mazeLogic.js';
 import {
 	generatorSelect,
 	generatorSpeedSelect,
-	getGeneratorAlgo,
+	generateButton,
 	solverSelect,
 	solverSpeedSelect,
+	solveButton,
+	clearButton,
 } from './controller.js';
 
 let width = 0;
@@ -124,6 +126,11 @@ export function setControlsState(isEnabled) {
 	document.body.classList.toggle('not-allowed', !isEnabled);
 }
 
+export function closeMenu() {
+	const aside = document.querySelector('aside');
+	aside.classList.remove('open');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 	const numParticles = 40;
 	const particleDiv = document.getElementById('particles');
@@ -142,4 +149,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		particleDiv.appendChild(particle);
 	}
+
+	// Hamburger menu
+	const openButton = document.getElementById('openHambMenu');
+	const closeButton = document.getElementById('closeHambMenu');
+	const aside = document.querySelector('aside');
+
+	openButton.addEventListener('click', () => {
+		aside.classList.toggle('open');
+	});
+
+	closeButton.addEventListener('click', () => {
+		closeMenu();
+	});
 });

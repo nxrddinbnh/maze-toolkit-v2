@@ -6,6 +6,7 @@ import {
 	getHeight,
 	getWidth,
 	showToast,
+	closeMenu,
 } from './userInterface.js';
 import {
 	prepareMaze,
@@ -24,9 +25,9 @@ export const generatorSelect = document.querySelector('#generators');
 export const generatorSpeedSelect = document.querySelector('#speedGenerator');
 export const solverSelect = document.querySelector('#solvers');
 export const solverSpeedSelect = document.querySelector('#speedSolver');
-const generateButton = document.querySelector('#generateButton');
-const solveButton = document.querySelector('#solveButton');
-const clearButton = document.querySelector('#clearButton');
+export const generateButton = document.querySelector('#generateButton');
+export const solveButton = document.querySelector('#solveButton');
+export const clearButton = document.querySelector('#clearButton');
 const stopButton = document.querySelector('#stopButton');
 
 function onResize() {
@@ -87,12 +88,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		prepareMaze();
 		Module.ccall('generateMaze', null, ['number'], [getGeneratorAlgo()]);
 		Module.ccall('setEntryExit', null, null, null);
+		closeMenu();
 		updateMaze(1);
 	});
 
 	solveButton.addEventListener('click', () => {
 		restorePath();
 		Module.ccall('solveMaze', null, ['number'], [getSolverAlgo()]);
+		closeMenu();
 		updateMaze(0);
 	});
 
@@ -105,6 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
 				updateCellClass(y, x, 0);
 			}
 		}
+
+		closeMenu();
 	});
 
 	stopButton.addEventListener('click', () => {
