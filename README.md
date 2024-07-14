@@ -3,7 +3,23 @@ Tool for generating and solving mazes using C++. This project is compiled to Web
 
 <div align="center">
   <a href="https://nxrddinbnh.github.io/maze-toolkit-v2/public/index.html">
-    <img src="./public/assets/maze-toolkit.webp">
+    <img src="./public/assets/Screens/maze-toolkit.webp">
+  </a>
+  
+  <a href="https://nxrddinbnh.github.io/maze-toolkit-v2/public/index.html">
+    <img src="./public/assets/Screens/preview-1.webp">
+  </a>
+
+  <a href="https://nxrddinbnh.github.io/maze-toolkit-v2/public/index.html">
+    <img src="./public/assets/Screens/preview-2.gif">
+  </a>
+
+  <a href="https://nxrddinbnh.github.io/maze-toolkit-v2/public/index.html">
+    <img src="./public/assets/Screens/preview-3.gif">
+  </a>
+
+  <a href="https://nxrddinbnh.github.io/maze-toolkit-v2/public/index.html">
+    <img src="./public/assets/Screens/preview-4.gif">
   </a>
 </div>
 
@@ -12,9 +28,11 @@ Tool for generating and solving mazes using C++. This project is compiled to Web
 <details>
   <summary>Summary</summary>
 
-- Features
-- Algorithms
-- References
+- [Features](#features-)
+- [Algorithms](#algorithms-)
+  - [Generation Algorithms](#generation-algorithms)
+  - [Solving Algorithms](#solving-algorithms)
+- [References](#references-)
   
 </details>
 
