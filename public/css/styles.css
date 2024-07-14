@@ -54,6 +54,7 @@ main {
 
 aside {
     max-width: 25em;
+    height: 100vh;
     padding: 20px 30px;
     background-color: rgba(0, 0, 0, 0.4);
     border-right: 1px solid var(--mt-blue-border);
@@ -394,7 +395,6 @@ section {
 @media (max-width: 650px) {
     aside {
         position: absolute;
-        height: 100%;
         left: -100%;
         background-color: rgba(0, 0, 0, 0.8);
         backdrop-filter: blur(20px);
