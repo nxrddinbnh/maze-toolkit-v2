@@ -129,6 +129,7 @@ export function setControlsState(isEnabled) {
 export function closeMenu() {
 	const aside = document.querySelector('aside');
 	aside.classList.remove('open');
+	openButton.style.display = 'flex';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -162,6 +163,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	closeButton.addEventListener('click', () => {
 		closeMenu();
-		openButton.style.display = 'flex';
 	});
 });
