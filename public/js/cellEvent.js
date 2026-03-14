@@ -1,3 +1,4 @@
+import { CellType } from './constants.js';
 import { getIsGenerating, getIsSolving } from './mazeLogic.js';
 import { showToast, updateCellClass, closeMenu } from './userInterface.js';
 import { mazeContainer } from './controller.js';
@@ -6,194 +7,126 @@ let isMouseDown = false;
 let lastCellId = '';
 let isDragging = false;
 
+function parseCellId(id) {
+	const [, y, x] = id.split('-').map(Number);
+	return { y, x };
+}
+
+function guardAgainstAnimation() {
+	if (getIsGenerating() || getIsSolving()) {
+		showToast('warning', 'Warning', 'Maze is currently being generated or solved! Please wait.');
+		return true;
+	}
+	return false;
+}
+
 function moveEntryExit() {
 	let draggedCell = null;
 	let originalCellId = '';
 
-	// Identify the cell to be moved
+	function startDrag(cell) {
+		if (guardAgainstAnimation()) return;
+		draggedCell = cell;
+		originalCellId = cell.id;
+		draggedCell.classList.add('dragging');
+		isDragging = true;
+	}
+
+	function tryMoveDraggedCell(target) {
+		if (!draggedCell || !target || target.tagName !== 'BUTTON' || target === draggedCell) return;
+
+		const { y: origY, x: origX } = parseCellId(originalCellId);
+		const { y: targetY, x: targetX } = parseCellId(target.id);
+		const cellType = Module.ccall('getTypeCell', 'number', ['number', 'number'], [targetY, targetX]);
+
+		if (cellType !== CellType.EMPTY && cellType !== CellType.PATH) return;
+
+		let entryExitType;
+		if (draggedCell.classList.contains('entry')) {
+			target.classList.add('entry');
+			entryExitType = CellType.ENTRY;
+		} else if (draggedCell.classList.contains('exit')) {
+			target.classList.add('exit');
+			entryExitType = CellType.EXIT;
+		} else {
+			return;
+		}
+
+		draggedCell.classList.remove('entry', 'exit');
+
+		Module.ccall('setTypeCell', null, ['number', 'number', 'number'], [targetY, targetX, entryExitType]);
+		Module.ccall('setTypeCell', null, ['number', 'number', 'number'], [origY, origX, CellType.EMPTY]);
+
+		updateCellClass(targetY, targetX, 0);
+		updateCellClass(origY, origX, 0);
+
+		originalCellId = target.id;
+		draggedCell = target;
+	}
+
+	function highlightDragTarget(target) {
+		if (!target || target.classList.contains('wall')) return;
+
+		const isEntry = draggedCell?.classList.contains('entry');
+		const isExit  = draggedCell?.classList.contains('exit');
+
+		if ((isEntry && !target.classList.contains('exit')) ||
+		    (isExit  && !target.classList.contains('entry'))) {
+			target.classList.add('dragging');
+		}
+	}
+
+	function endDrag() {
+		if (draggedCell) {
+			draggedCell.classList.remove('dragging');
+			draggedCell = null;
+			isDragging = false;
+		}
+	}
+
+	// Mouse events
 	mazeContainer.addEventListener('mousedown', (event) => {
-		if (event.target && event.target.tagName === 'BUTTON' && event.button === 0) {
-			const cell = event.target;
-			const cellId = cell.id;
-			const cellClasses = cell.classList;
+		if (event.button !== 0 || event.target?.tagName !== 'BUTTON') return;
 
-			if (cellClasses.contains('entry') || cellClasses.contains('exit')) {
-				if (getIsGenerating() || getIsSolving()) {
-					showToast('warning', 'Warning', 'Maze is currently being generated or solved! Please wait.');
-					return;
-				}
-
-				draggedCell = cell;
-				originalCellId = cellId;
-				draggedCell.classList.add('dragging');
-				isDragging = true;
-			}
+		const cell = event.target;
+		if (cell.classList.contains('entry') || cell.classList.contains('exit')) {
+			startDrag(cell);
 		}
 	});
 
-	// Move entry/exit to the new empty cell
 	mazeContainer.addEventListener('mousemove', (event) => {
-		if (draggedCell) {
-			const [_, origY, origX] = originalCellId.split('-').map(Number);
-			const target = event.target;
-
-			if (target && !target.classList.contains('wall')) {
-				if (
-					(draggedCell.classList.contains('entry') && !target.classList.contains('exit')) ||
-					(draggedCell.classList.contains('exit') && !target.classList.contains('entry'))
-				) {
-					target.classList.add('dragging');
-				}
-			}
-
-			if (target && target.tagName === 'BUTTON' && target !== draggedCell) {
-				const [_, targetY, targetX] = target.id.split('-').map(Number);
-				const cellType = Module.ccall('getTypeCell', 'number', ['number', 'number'], [targetY, targetX]);
-
-				if (cellType === 0 || cellType === 2147483646) {
-					let entryExit = -2;
-
-					// Add the class to the new cell
-					if (draggedCell.classList.contains('entry')) {
-						target.classList.add('entry');
-						entryExit = 3;
-					} else if (draggedCell.classList.contains('exit')) {
-						target.classList.add('exit');
-						entryExit = 4;
-					}
-
-					// Remove the class from the original cell
-					draggedCell.classList.remove('entry', 'exit');
-
-					// Update the cell state
-					Module.ccall('setTypeCell', null, ['number', 'number', 'number'], [targetY, targetX, entryExit]);
-					Module.ccall('setTypeCell', null, ['number', 'number', 'number'], [origY, origX, 0]);
-
-					// Update the UI
-					updateCellClass(targetY, targetX, 0);
-					updateCellClass(origY, origX, 0);
-
-					// Update original cell ID
-					originalCellId = target.id;
-					draggedCell = target;
-				}
-			}
-		}
+		if (!draggedCell) return;
+		highlightDragTarget(event.target);
+		tryMoveDraggedCell(event.target);
 	});
 
-	// Reset variables and remove .dragging class
-	mazeContainer.addEventListener('mouseup', () => {
-		if (draggedCell) {
-			draggedCell.classList.remove('dragging');
-			draggedCell = null;
-			isDragging = false;
-		}
-	});
+	mazeContainer.addEventListener('mouseup', endDrag);
+	mazeContainer.addEventListener('mouseleave', endDrag);
 
-	mazeContainer.addEventListener('mouseleave', () => {
-		if (draggedCell) {
-			draggedCell.classList.remove('dragging');
-			draggedCell = null;
-			isDragging = false;
-		}
-	});
-
-	// For touch mode
-	// Identify the cell to be moved
+	// Touch events
 	mazeContainer.addEventListener('touchstart', (event) => {
 		closeMenu();
-		const touch = event.touches[0];
-		const target = document.elementFromPoint(touch.clientX, touch.clientY);
-
-		if (target && target.tagName === 'BUTTON') {
-			const cell = target;
-			const cellId = cell.id;
-			const cellClasses = cell.classList;
-
-			if (cellClasses.contains('entry') || cellClasses.contains('exit')) {
-				if (getIsGenerating() || getIsSolving()) {
-					showToast('warning', 'Warning', 'Maze is currently being generated or solved! Please wait.');
-					return;
-				}
-
-				draggedCell = cell;
-				originalCellId = cellId;
-				draggedCell.classList.add('dragging');
-				isDragging = true;
-			}
+		const target = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY);
+		if (target?.tagName === 'BUTTON' &&
+		    (target.classList.contains('entry') || target.classList.contains('exit'))) {
+			startDrag(target);
 		}
 	});
 
-	// Move entry/exit to the new empty cell
 	mazeContainer.addEventListener('touchmove', (event) => {
-		if (draggedCell) {
-			const [_, origY, origX] = originalCellId.split('-').map(Number);
-			const touch = event.touches[0];
-			const target = document.elementFromPoint(touch.clientX, touch.clientY);
-
-			if (target && !target.classList.contains('wall')) {
-				if (
-					(draggedCell.classList.contains('entry') && !target.classList.contains('exit')) ||
-					(draggedCell.classList.contains('exit') && !target.classList.contains('entry'))
-				) {
-					target.classList.add('dragging');
-				}
-			}
-
-			if (target && target.tagName === 'BUTTON' && target !== draggedCell) {
-				const [_, targetY, targetX] = target.id.split('-').map(Number);
-				const cellType = Module.ccall('getTypeCell', 'number', ['number', 'number'], [targetY, targetX]);
-
-				if (cellType === 0 || cellType === 2147483646) {
-					let entryExit = -2;
-
-					// Add the class to the new cell
-					if (draggedCell.classList.contains('entry')) {
-						target.classList.add('entry');
-						entryExit = 3;
-					} else if (draggedCell.classList.contains('exit')) {
-						target.classList.add('exit');
-						entryExit = 4;
-					}
-
-					// Remove the class from the original cell
-					draggedCell.classList.remove('entry', 'exit');
-
-					// Update the cell state
-					Module.ccall('setTypeCell', null, ['number', 'number', 'number'], [targetY, targetX, entryExit]);
-					Module.ccall('setTypeCell', null, ['number', 'number', 'number'], [origY, origX, 0]);
-
-					// Update the UI
-					updateCellClass(targetY, targetX, 0);
-					updateCellClass(origY, origX, 0);
-
-					// Update original cell ID
-					originalCellId = target.id;
-					draggedCell = target;
-				}
-			}
-		}
+		if (!draggedCell) return;
+		const target = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY);
+		highlightDragTarget(target);
+		tryMoveDraggedCell(target);
 	});
 
-	// Reset variables and remove .dragging class
-	mazeContainer.addEventListener('touchend', () => {
-		if (draggedCell) {
-			draggedCell.classList.remove('dragging');
-			draggedCell = null;
-			isDragging = false;
-		}
-	});
+	mazeContainer.addEventListener('touchend', endDrag);
 }
 
 function toggleCellType(y, x, generatorSelect) {
 	closeMenu();
-	const cell = document.getElementById(`cell-${y}-${x}`);
-	let cellType = Module.ccall('getTypeCell', 'number', ['number', 'number'], [y, x]);
 
-	if (getIsGenerating() || getIsSolving()) {
-		showToast('warning', 'Warning', 'Maze is currently being generated or solved! Please wait.');
-		return;
-	}
+	if (guardAgainstAnimation()) return;
 
 	if (generatorSelect.selectedIndex !== 6) {
 		generatorSelect.selectedIndex = 6;
@@ -201,84 +134,72 @@ function toggleCellType(y, x, generatorSelect) {
 		showToast('info', 'Info', 'You are now in custom mode! Feel free to modify the maze.');
 	}
 
-	if (cell && cellType !== 3 && cellType !== 4) {
-		cell.className = '';
+	const cell = document.getElementById(`cell-${y}-${x}`);
+	const cellType = Module.ccall('getTypeCell', 'number', ['number', 'number'], [y, x]);
 
-		if (cellType === -1) {
-			cell.classList.add('cell');
-			cellType = 0;
-		} else {
-			cell.classList.add('wallAnimation', 'cell', 'wall');
-			cellType = -1;
-		}
+	if (!cell || cellType === CellType.ENTRY || cellType === CellType.EXIT) return;
+
+	let newType;
+	if (cellType === CellType.WALL) {
+		cell.className = 'cell';
+		newType = CellType.EMPTY;
+	} else {
+		cell.className = 'wallAnimation cell wall';
+		newType = CellType.WALL;
 	}
 
-	Module.ccall('setTypeCell', null, ['number', 'number', 'number'], [y, x, cellType]);
+	Module.ccall('setTypeCell', null, ['number', 'number', 'number'], [y, x, newType]);
 }
 
 export function setMouseEvents(mazeContainer, generatorSelect) {
 	moveEntryExit();
 
 	mazeContainer.addEventListener('mousedown', (event) => {
-		if (event.target && event.target.tagName === 'BUTTON' && event.button === 0) {
-			const cellId = event.target.id;
-			const [_, y, x] = cellId.split('-').map(Number);
-			isMouseDown = true;
-			lastCellId = cellId;
+		if (event.button !== 0 || event.target?.tagName !== 'BUTTON') return;
 
-			if (!isDragging) {
-				toggleCellType(y, x, generatorSelect);
-			}
+		const { y, x } = parseCellId(event.target.id);
+		isMouseDown = true;
+		lastCellId = event.target.id;
+
+		if (!isDragging) {
+			toggleCellType(y, x, generatorSelect);
 		}
 	});
 
 	mazeContainer.addEventListener('mousemove', (event) => {
-		if (isMouseDown && event.target && event.target.tagName === 'BUTTON') {
-			const cellId = event.target.id;
+		if (!isMouseDown || event.target?.tagName !== 'BUTTON') return;
 
-			if (cellId !== lastCellId) {
-				lastCellId = cellId;
-				const [_, y, x] = cellId.split('-').map(Number);
+		const cellId = event.target.id;
+		if (cellId === lastCellId) return;
 
-				if (!isDragging) {
-					toggleCellType(y, x, generatorSelect);
-				}
-			}
+		lastCellId = cellId;
+		const { y, x } = parseCellId(cellId);
+
+		if (!isDragging) {
+			toggleCellType(y, x, generatorSelect);
 		}
 	});
 
-	mazeContainer.addEventListener('mouseup', () => {
-		isMouseDown = false;
-	});
+	mazeContainer.addEventListener('mouseup',    () => { isMouseDown = false; });
+	mazeContainer.addEventListener('mouseleave', () => { isMouseDown = false; });
 
-	mazeContainer.addEventListener('mouseleave', () => {
-		isMouseDown = false;
-	});
-
-	// For touch mode
-	mazeContainer.addEventListener('touchstart', (event) => {
-		isMouseDown = true;
-	});
+	// Touch events
+	mazeContainer.addEventListener('touchstart', () => { isMouseDown = true; });
 
 	mazeContainer.addEventListener('touchmove', (event) => {
-		const touch = event.touches[0];
-		const target = document.elementFromPoint(touch.clientX, touch.clientY);
+		const target = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY);
+		if (!isMouseDown || target?.tagName !== 'BUTTON') return;
 
-		if (isMouseDown && target && target.tagName === 'BUTTON') {
-			const cellId = target.id;
+		const cellId = target.id;
+		if (cellId === lastCellId) return;
 
-			if (cellId !== lastCellId) {
-				lastCellId = cellId;
-				const [_, y, x] = cellId.split('-').map(Number);
+		lastCellId = cellId;
+		const { y, x } = parseCellId(cellId);
 
-				if (!isDragging) {
-					toggleCellType(y, x, generatorSelect);
-				}
-			}
+		if (!isDragging) {
+			toggleCellType(y, x, generatorSelect);
 		}
 	});
 
-	mazeContainer.addEventListener('touchend', () => {
-		isMouseDown = false;
-	});
+	mazeContainer.addEventListener('touchend', () => { isMouseDown = false; });
 }

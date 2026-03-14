@@ -1,2 +1,24 @@
-.vscode/
+# Emscripten SDK
 emsdk/
+
+# Compiled output
+/bin/
+
+# C++ artifacts
+*.o
+*.a
+*.out
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/

@@ -24,17 +24,10 @@ void ClearCellOrder()
 
 bool InLimits(std::vector<std::vector<int>> *maze, std::pair<int, int> cell)
 {
-    bool inLimits = false;
-
-    if (cell.first > 0 &&
-        cell.first < (*maze).size() &&
-        cell.second > 0 &&
-        cell.second < (*maze)[0].size())
-    {
-        inLimits = true;
-    }
-
-    return inLimits;
+    return cell.first > 0 &&
+           cell.first < (*maze).size() &&
+           cell.second > 0 &&
+           cell.second < (*maze)[0].size();
 }
 
 std::pair<int, int> RandomCell(std::vector<std::vector<int>> *maze)
@@ -66,15 +59,15 @@ void SetEntryExit(std::vector<std::vector<int>> *maze)
     do
     {
         entry = randomEntryExit(random);
-    } while (entry % 2 == 0 && (*maze)[entry][1] == -1);
+    } while (entry % 2 == 0 && (*maze)[entry][1] == CellType::WALL);
 
     do
     {
         exit = randomEntryExit(random);
-    } while (exit % 2 == 0 && (*maze)[exit][(*maze)[0].size() - 2] == -1);
+    } while (exit % 2 == 0 && (*maze)[exit][(*maze)[0].size() - 2] == CellType::WALL);
 
-    (*maze)[entry][1] = 3;
-    (*maze)[exit][(*maze)[0].size() - 2] = 4;
+    (*maze)[entry][1] = CellType::ENTRY;
+    (*maze)[exit][(*maze)[0].size() - 2] = CellType::EXIT;
 }
 
 std::pair<std::pair<int, int>, std::pair<int, int>> FindEntryExit(std::vector<std::vector<int>> *maze)
@@ -86,11 +79,11 @@ std::pair<std::pair<int, int>, std::pair<int, int>> FindEntryExit(std::vector<st
     {
         for (int x = 1; x < (*maze)[0].size() - 1; ++x)
         {
-            if ((*maze)[y][x] == 3)
+            if ((*maze)[y][x] == CellType::ENTRY)
             {
                 entry = {y, x};
             }
-            else if ((*maze)[y][x] == 4)
+            else if ((*maze)[y][x] == CellType::EXIT)
             {
                 exit = {y, x};
             }
@@ -106,14 +99,9 @@ void Enclose(std::vector<std::vector<int>> *maze)
     {
         for (int x = 0; x < (*maze)[0].size(); x++)
         {
-            if (x == 0 || x == (*maze)[0].size() - 1 || y == 0 || y == (*maze).size() - 1)
-            {
-                (*maze)[y][x] = -1;
-            }
-            else
-            {
-                (*maze)[y][x] = 0;
-            }
+            bool isBorder = x == 0 || x == (*maze)[0].size() - 1 ||
+                            y == 0 || y == (*maze).size() - 1;
+            (*maze)[y][x] = isBorder ? CellType::WALL : CellType::EMPTY;
         }
     }
 }
@@ -124,21 +112,7 @@ void Grid(std::vector<std::vector<int>> *maze)
     {
         for (int x = 0; x < (*maze)[0].size(); x++)
         {
-            if (y % 2 == 0)
-            {
-                (*maze)[y][x] = -1;
-            }
-            else
-            {
-                if (x % 2 == 0)
-                {
-                    (*maze)[y][x] = -1;
-                }
-                else
-                {
-                    (*maze)[y][x] = 0;
-                }
-            }
+            (*maze)[y][x] = (y % 2 == 0 || x % 2 == 0) ? CellType::WALL : CellType::EMPTY;
         }
     }
 }
@@ -149,7 +123,7 @@ void Fill(std::vector<std::vector<int>> *maze)
     {
         for (int x = 0; x < (*maze)[0].size(); x++)
         {
-            (*maze)[y][x] = -1;
+            (*maze)[y][x] = CellType::WALL;
         }
     }
 }
@@ -162,17 +136,17 @@ void PrintMaze(std::vector<std::vector<int>> *maze)
     {
         for (int x = 0; x < (*maze)[0].size(); x++)
         {
-            if ((*maze)[y][x] <= -3 || (*maze)[y][x] == -1)
+            if ((*maze)[y][x] == CellType::WALL)
             {
-                std::cout << "# "; // Walls
+                std::cout << "# ";
             }
-            else if ((*maze)[y][x] == 2147483646)
+            else if ((*maze)[y][x] == CellType::PATH)
             {
-                std::cout << ". "; // Right way
+                std::cout << ". ";
             }
             else
             {
-                std::cout << "  "; // Empty cells
+                std::cout << "  ";
             }
         }
 

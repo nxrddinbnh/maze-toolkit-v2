@@ -1,7 +1,7 @@
 #include "../include/solve-maze.hpp"
 #include "../include/solvers/breadth-first.hpp"
 #include "../include/solvers/bidirectional-bfs.hpp"
-#include "../include/solvers/a-start.hpp"
+#include "../include/solvers/a-star.hpp"
 
 void SolveMaze(std::vector<std::vector<int>> *maze, int *algorithm)
 {

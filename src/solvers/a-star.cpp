@@ -1,4 +1,4 @@
-#include "../../include/solvers/a-start.hpp"
+#include "../../include/solvers/a-star.hpp"
 #include "../../include/tools.hpp"
 
 void AStar(std::vector<std::vector<int>> *maze)
@@ -30,9 +30,9 @@ void AStar(std::vector<std::vector<int>> *maze)
             // Trace back to mark the shortest path
             while (!(current == entry))
             {
-                if ((*maze)[current.first][current.second] != 3)
+                if ((*maze)[current.first][current.second] != CellType::ENTRY)
                 {
-                    (*maze)[current.first][current.second] = 2147483646;
+                    (*maze)[current.first][current.second] = CellType::PATH;
                 }
 
                 AddCellToOrder(current.first, current.second);
@@ -40,7 +40,7 @@ void AStar(std::vector<std::vector<int>> *maze)
                 current = prevCell;
             }
 
-            (*maze)[exit.first][exit.second] = 4;
+            (*maze)[exit.first][exit.second] = CellType::EXIT;
             return;
         }
 
@@ -51,7 +51,7 @@ void AStar(std::vector<std::vector<int>> *maze)
             int nextX = current.second + dir.second;
 
             // Check boundaries and if the next cell is passable and not visited
-            if (InLimits(maze, {nextY, nextX}) && (*maze)[nextY][nextX] != -1)
+            if (InLimits(maze, {nextY, nextX}) && (*maze)[nextY][nextX] != CellType::WALL)
             {
                 int costFromStart = currentCost + 1;
                 int heuristic = std::abs(nextY - exit.first) + std::abs(nextX - exit.second);

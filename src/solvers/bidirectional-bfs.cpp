@@ -38,16 +38,12 @@ void BidirectionalBFS(std::vector<std::vector<int>> *maze)
                 int nextY = current.first + dir.first;
                 int nextX = current.second + dir.second;
 
-                // Cell is accessible
-                if (InLimits(maze, {nextY, nextX}))
+                if (InLimits(maze, {nextY, nextX}) && (*maze)[nextY][nextX] != CellType::WALL && !isVisitedEntry[nextY][nextX])
                 {
-                    if ((*maze)[nextY][nextX] != -1 && !isVisitedEntry[nextY][nextX])
-                    {
-                        queueEntry.push({nextY, nextX});
-                        isVisitedEntry[nextY][nextX] = true;
-                        prevEntry[nextY][nextX] = current;
-                        AddCellToOrder(nextY, nextX);
-                    }
+                    queueEntry.push({nextY, nextX});
+                    isVisitedEntry[nextY][nextX] = true;
+                    prevEntry[nextY][nextX] = current;
+                    AddCellToOrder(nextY, nextX);
                 }
             }
         }
@@ -63,21 +59,17 @@ void BidirectionalBFS(std::vector<std::vector<int>> *maze)
                 int nextY = current.first + dir.first;
                 int nextX = current.second + dir.second;
 
-                // Cell is accessible
-                if (InLimits(maze, {nextY, nextX}))
+                if (InLimits(maze, {nextY, nextX}) && (*maze)[nextY][nextX] != CellType::WALL && !isVisitedExit[nextY][nextX])
                 {
-                    if ((*maze)[nextY][nextX] != -1 && !isVisitedExit[nextY][nextX])
-                    {
-                        queueExit.push({nextY, nextX});
-                        isVisitedExit[nextY][nextX] = true;
-                        prevExit[nextY][nextX] = current;
-                        AddCellToOrder(nextY, nextX);
-                    }
+                    queueExit.push({nextY, nextX});
+                    isVisitedExit[nextY][nextX] = true;
+                    prevExit[nextY][nextX] = current;
+                    AddCellToOrder(nextY, nextX);
                 }
             }
         }
 
-        // Check if the two searches have been found
+        // Check if the two searches have met
         for (int y = 0; y < (*maze).size(); ++y)
         {
             for (int x = 0; x < (*maze)[0].size(); ++x)
@@ -90,9 +82,9 @@ void BidirectionalBFS(std::vector<std::vector<int>> *maze)
 
                     while (currentX != -1 && currentY != -1)
                     {
-                        if ((*maze)[currentY][currentX] != 3)
+                        if ((*maze)[currentY][currentX] != CellType::ENTRY)
                         {
-                            (*maze)[currentY][currentX] = 2147483646;
+                            (*maze)[currentY][currentX] = CellType::PATH;
                         }
 
                         AddCellToOrder(currentY, currentX);
@@ -107,9 +99,9 @@ void BidirectionalBFS(std::vector<std::vector<int>> *maze)
 
                     while (currentX != -1 && currentY != -1)
                     {
-                        if ((*maze)[currentY][currentX] != 3)
+                        if ((*maze)[currentY][currentX] != CellType::ENTRY)
                         {
-                            (*maze)[currentY][currentX] = 2147483646;
+                            (*maze)[currentY][currentX] = CellType::PATH;
                         }
 
                         AddCellToOrder(currentY, currentX);
@@ -118,7 +110,7 @@ void BidirectionalBFS(std::vector<std::vector<int>> *maze)
                         currentX = prevCell.second;
                     }
 
-                    (*maze)[exit.first][exit.second] = 4;
+                    (*maze)[exit.first][exit.second] = CellType::EXIT;
                     return;
                 }
             }

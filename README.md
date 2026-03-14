@@ -1,25 +1,26 @@
 # Maze Toolkit
+
 Tool for generating and solving mazes using C++. This project is compiled to WebAssembly with Emscripten for web-based interaction.
 
 <div align="center">
   <a href="https://nxrddinbnh.github.io/maze-toolkit-v2/public/index.html">
-    <img src="./public/assets/Screens/maze-toolkit.webp">
+    <img src="./public/assets/screens/maze-toolkit.webp">
   </a>
   
   <a href="https://nxrddinbnh.github.io/maze-toolkit-v2/public/index.html">
-    <img src="./public/assets/Screens/preview-1.webp">
+    <img src="./public/assets/screens/preview-1.webp">
   </a>
 
   <a href="https://nxrddinbnh.github.io/maze-toolkit-v2/public/index.html">
-    <img src="./public/assets/Screens/preview-2.gif">
+    <img src="./public/assets/screens/preview-2.gif">
   </a>
 
   <a href="https://nxrddinbnh.github.io/maze-toolkit-v2/public/index.html">
-    <img src="./public/assets/Screens/preview-3.gif">
+    <img src="./public/assets/screens/preview-3.gif">
   </a>
 
   <a href="https://nxrddinbnh.github.io/maze-toolkit-v2/public/index.html">
-    <img src="./public/assets/Screens/preview-4.gif">
+    <img src="./public/assets/screens/preview-4.gif">
   </a>
 </div>
 
@@ -33,7 +34,7 @@ Tool for generating and solving mazes using C++. This project is compiled to Web
   - [Generation Algorithms](#generation-algorithms)
   - [Solving Algorithms](#solving-algorithms)
 - [References](#references-)
-  
+
 </details>
 
 ## Features 🌟
@@ -44,6 +45,7 @@ Tool for generating and solving mazes using C++. This project is compiled to Web
 - **Web Interface**: A user-friendly web interface for generating, solving, and designing mazes.
 
 ## Algorithms 🤖
+
 ### Generation Algorithms:
 
 - Randomized Depth First
@@ -57,16 +59,16 @@ Tool for generating and solving mazes using C++. This project is compiled to Web
 
 - Breadth First
 - Bidirectional BF
-- A*
+- A\*
 
 ## References 📚
 
 Here are some resources that inspired and informed the development of this project:
 
-- [Maze Generation Algorithms](https://weblog.jamisbuck.org/2011/2/7/maze-generation-algorithm-recap) - A description of various algorithms for generating mazes.
-- [Emscripten Documentation](https://developer.mozilla.org/en-US/docs/WebAssembly/C_to_Wasm) - The official documentation for compiling C++ to WebAssembly.
-- [Algo Visualizers by Sadanand Pai](https://sadanandpai.github.io/algo-visualizers/#/path-finder/) - Inspired the design and functionality of the maze generation interface.
-  
+- [Maze Generation Algorithms](https://weblog.jamisbuck.org/2011/2/7/maze-generation-algorithm-recap)
+- [Emscripten Documentation](https://developer.mozilla.org/en-US/docs/WebAssembly/C_to_Wasm)
+- [Algo Visualizers by Sadanand Pai](https://sadanandpai.github.io/algo-visualizers/#/path-finder/)
+
 <br>
 
 <div align="center">

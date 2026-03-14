@@ -17,7 +17,7 @@ void Kruskal(std::vector<std::vector<int>> *maze)
     {
         for (int x = 1; x < (*maze)[0].size() - 1; x++)
         {
-            if ((*maze)[y][x] == -1)
+            if ((*maze)[y][x] == CellType::WALL)
             {
                 if ((y + x) % 2 == 1)
                 {
@@ -47,7 +47,7 @@ void Kruskal(std::vector<std::vector<int>> *maze)
         {
             if (isHorizontal)
             {
-                if ((*maze)[y][x - 1] != -1 && (*maze)[y][x + 1] != -1 && (*maze)[y][x - 1] != (*maze)[y][x + 1])
+                if ((*maze)[y][x - 1] != CellType::WALL && (*maze)[y][x + 1] != CellType::WALL && (*maze)[y][x - 1] != (*maze)[y][x + 1])
                 {
                     minValue = std::min((*maze)[y][x - 1], (*maze)[y][x + 1]);
                     maxValue = std::max((*maze)[y][x - 1], (*maze)[y][x + 1]);
@@ -57,7 +57,7 @@ void Kruskal(std::vector<std::vector<int>> *maze)
             }
             else
             {
-                if ((*maze)[y - 1][x] != -1 && (*maze)[y + 1][x] != -1 && (*maze)[y - 1][x] != (*maze)[y + 1][x])
+                if ((*maze)[y - 1][x] != CellType::WALL && (*maze)[y + 1][x] != CellType::WALL && (*maze)[y - 1][x] != (*maze)[y + 1][x])
                 {
                     minValue = std::min((*maze)[y - 1][x], (*maze)[y + 1][x]);
                     maxValue = std::max((*maze)[y - 1][x], (*maze)[y + 1][x]);
@@ -92,14 +92,7 @@ void Kruskal(std::vector<std::vector<int>> *maze)
     {
         for (int x = 1; x < (*maze)[0].size() - 1; x++)
         {
-            if ((*maze)[y][x] > 0)
-            {
-                (*maze)[y][x] = 0;
-            }
-            else
-            {
-                (*maze)[y][x] = -1;
-            }
+            (*maze)[y][x] = (*maze)[y][x] > 0 ? CellType::EMPTY : CellType::WALL;
         }
     }
 }

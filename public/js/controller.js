@@ -1,3 +1,4 @@
+import { CellType, SPEED_INTERVALS } from './constants.js';
 import { setMouseEvents } from './cellEvent.js';
 import {
 	initializeMazeUI,
@@ -20,19 +21,15 @@ import {
 	getIsGenerating,
 } from './mazeLogic.js';
 
-export const mazeContainer = document.querySelector('#maze');
-export const generatorSelect = document.querySelector('#generators');
-export const generatorSpeedSelect = document.querySelector('#speedGenerator');
-export const solverSelect = document.querySelector('#solvers');
-export const solverSpeedSelect = document.querySelector('#speedSolver');
-export const generateButton = document.querySelector('#generateButton');
-export const solveButton = document.querySelector('#solveButton');
-export const clearButton = document.querySelector('#clearButton');
-const stopButton = document.querySelector('#stopButton');
-
-function onResize() {
-	location.reload();
-}
+export const mazeContainer         = document.querySelector('#maze');
+export const generatorSelect       = document.querySelector('#generators');
+export const generatorSpeedSelect  = document.querySelector('#speedGenerator');
+export const solverSelect          = document.querySelector('#solvers');
+export const solverSpeedSelect     = document.querySelector('#speedSolver');
+export const generateButton        = document.querySelector('#generateButton');
+export const solveButton           = document.querySelector('#solveButton');
+export const clearButton           = document.querySelector('#clearButton');
+const stopButton                   = document.querySelector('#stopButton');
 
 export function getGeneratorAlgo() {
 	return generatorSelect.value;
@@ -43,46 +40,17 @@ export function getSolverAlgo() {
 }
 
 export function getGeneratorSpeedInterval() {
-	switch (generatorSpeedSelect.value) {
-		case '1':
-			return 0;
-		case '2':
-			return 5;
-		case '3':
-			return 10;
-		case '4':
-			return 20;
-		case '5':
-			return 40;
-		case '6':
-			return 200;
-		default:
-			return 5;
-	}
+	return SPEED_INTERVALS[generatorSpeedSelect.selectedIndex] ?? SPEED_INTERVALS[1];
 }
 
 export function getSolverSpeedInterval() {
-	switch (solverSpeedSelect.value) {
-		case '1':
-			return 0;
-		case '2':
-			return 5;
-		case '3':
-			return 10;
-		case '4':
-			return 20;
-		case '5':
-			return 40;
-		case '6':
-			return 200;
-		default:
-			return 5;
-	}
+	return SPEED_INTERVALS[solverSpeedSelect.selectedIndex] ?? SPEED_INTERVALS[1];
 }
 
 document.addEventListener('DOMContentLoaded', () => {
 	generatorSpeedSelect.selectedIndex = 1;
 	solverSpeedSelect.selectedIndex = 1;
+	generateButton.disabled = generatorSelect.selectedIndex === 6;
 
 	generateButton.addEventListener('click', () => {
 		prepareMaze();
@@ -125,13 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
 			for (let y = 1; y < getHeight() - 1; y++) {
 				for (let x = 1; x < getWidth() - 1; x++) {
 					const cell = document.getElementById(`cell-${y}-${x}`);
+					if (!cell) continue;
 
-					if (cell) {
-						if (cell.classList.contains('wall')) {
-							Module.ccall('setTypeCell', null, ['number', 'number', 'number'], [y, x, -1]);
-						} else if (!cell.classList.contains('entry') && !cell.classList.contains('exit')) {
-							Module.ccall('setTypeCell', null, ['number', 'number', 'number'], [y, x, 0]);
-						}
+					if (cell.classList.contains('wall')) {
+						Module.ccall('setTypeCell', null, ['number', 'number', 'number'], [y, x, CellType.WALL]);
+					} else if (!cell.classList.contains('entry') && !cell.classList.contains('exit')) {
+						Module.ccall('setTypeCell', null, ['number', 'number', 'number'], [y, x, CellType.EMPTY]);
 					}
 				}
 			}
@@ -150,10 +117,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 
 	initializeMazeUI(mazeContainer);
-	window.addEventListener('resize', onResize);
+	window.addEventListener('resize', () => location.reload());
 	setMouseEvents(mazeContainer, generatorSelect);
 
-	// Make sure that the cells are created
+	// Ensure cells were created (WASM may load asynchronously)
 	setTimeout(() => {
 		if (mazeContainer.children.length === 0) {
 			location.reload();

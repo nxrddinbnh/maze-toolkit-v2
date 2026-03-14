@@ -70,7 +70,7 @@ aside #mtLogo {
     align-items: center;
     text-decoration: none;
     font-family: var(--font-pixel);
-    font-size: 15pt;
+    font-size: 1rem;
     color: #fff;
 }
 

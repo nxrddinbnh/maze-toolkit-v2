@@ -27,16 +27,16 @@ void BreadthFirst(std::vector<std::vector<int>> *maze)
             // Trace back to mark the path
             while (current.first != -1 && current.second != -1)
             {
-                if ((*maze)[current.first][current.second] != 3)
+                if ((*maze)[current.first][current.second] != CellType::ENTRY)
                 {
-                    (*maze)[current.first][current.second] = 2147483646;
+                    (*maze)[current.first][current.second] = CellType::PATH;
                 }
 
                 AddCellToOrder(current.first, current.second);
                 current = prev[current.first][current.second];
             }
 
-            (*maze)[exit.first][exit.second] = 4;
+            (*maze)[exit.first][exit.second] = CellType::EXIT;
             return;
         }
 
@@ -46,7 +46,7 @@ void BreadthFirst(std::vector<std::vector<int>> *maze)
             int nextY = current.first + dir.first;
             int nextX = current.second + dir.second;
 
-            if (InLimits(maze, {nextY, nextX}) && (*maze)[nextY][nextX] != -1 && !isVisited[nextY][nextX])
+            if (InLimits(maze, {nextY, nextX}) && (*maze)[nextY][nextX] != CellType::WALL && !isVisited[nextY][nextX])
             {
                 queue.push({nextY, nextX});
                 isVisited[nextY][nextX] = true;

@@ -1,0 +1,17 @@
+{
+  "name": "maze-toolkit-v2",
+  "version": "2.0.0",
+  "description": "Maze generation and solving toolkit",
+  "scripts": {
+    "build": "bash scripts/build.sh",
+    "build:wasm": "bash scripts/wasm.sh",
+    "serve": "npx serve public"
+  },
+  "keywords": [
+    "maze",
+    "webassembly",
+    "emscripten",
+    "algorithms"
+  ],
+  "license": "MIT"
+}

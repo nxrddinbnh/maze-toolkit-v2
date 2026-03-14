@@ -72,7 +72,7 @@ void RecursiveDivision(std::vector<std::vector<int>> *maze)
                 {
                     if (j != hole)
                     {
-                        (*maze)[y][j] = -1;
+                        (*maze)[y][j] = CellType::WALL;
                         AddCellToOrder(y, j);
                     }
                 }
@@ -100,7 +100,7 @@ void RecursiveDivision(std::vector<std::vector<int>> *maze)
             {
                 if (j != hole)
                 {
-                    (*maze)[j][x] = -1;
+                    (*maze)[j][x] = CellType::WALL;
                     AddCellToOrder(j, x);
                 }
             }
